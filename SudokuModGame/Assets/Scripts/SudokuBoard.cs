@@ -35,7 +35,7 @@ public class SudokuBoard : MonoBehaviour {
 					board[r,c].direction = Direction.RIGHT;
 				}
 				else if(r == 4){
-					board[r,c].direction = Direction.RIGHT;
+					board[r,c].direction = Direction.LEFT;
 				}
 				else if(c == 0){
 					board[r,c].direction = Direction.UP;
@@ -43,13 +43,21 @@ public class SudokuBoard : MonoBehaviour {
 				else if(c == 4){
 					board[r,c].direction = Direction.DOWN;
 				}
-
 			}
 		}
 
 		board[0,1].digit = 1;
 		board[0,2].digit = 2;
 		board[0,3].digit = 3;
+		board[4,1].digit = 3;
+		board[4,2].digit = 2;
+		board[4,3].digit = 1;
+		board[1,4].digit = 1;
+		board[2,4].digit = 2;
+		board[3,4].digit = 3;
+		board[3,0].digit = 1;
+		board[2,0].digit = 2;
+		board[1,0].digit = 3;
 
 	}
 	
@@ -63,14 +71,36 @@ public class SudokuBoard : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (Input.GetKey(KeyCode.DownArrow))
+		{
+			SlideTopEdge();
+		}
+		else if (Input.GetKey(KeyCode.UpArrow))
+		{
+			SlideBottomEdge();
+		}
+		else if (Input.GetKey(KeyCode.LeftArrow))
+		{
+			SlideRightEdge();
+		}
+		else if (Input.GetKey(KeyCode.RightArrow))
+		{
+			SlideLeftEdge();
+		}
+
+		if (IsFull())
+		{
+			if (IsValid()) Debug.Log("You Win!");
+			//gameObject.enabled = false;
+		}
 	}
 	
 	// check if the board is completely filled (might be invalid!)
 	public bool IsFull()
 	{
-		for (int r = 0; r < size; r++)
+		for (int r = 1; r < size - 1; r++)
 		{
-			for (int c = 0; c < size; c++)
+			for (int c = 1; c < size - 1; c++)
 			{
 				if (board[r, c].digit == 0)
 					return false;
@@ -84,11 +114,11 @@ public class SudokuBoard : MonoBehaviour {
 	// THIS MUST CHANGE IF TILES ARE DESTROYED/REPLACED
 	public bool IsValid()
 	{
-		for (int r = 0; r < size; r++)
+		for (int r = 1; r < size - 1; r++)
 		{
 			int sumr = 0;
 			int sumc = 0;
-			for (int c = 0; c < size; c++)
+			for (int c = 1; c < size - 1; c++)
 			{
 				sumr += board[r, c].digit;
 				sumc += board[c, r].digit;
@@ -145,7 +175,7 @@ public class SudokuBoard : MonoBehaviour {
 							tile.hasMoved = true;
 						}
 						// stop tiles in the middle from moving into the outer ring
-						else if ( (r > 0 && r < size - 1 && c < 0 && c < size - 1) && (rdst == 0 || rdst == size -1 || cdst == 0 || cdst == size - 1))
+						else if ( (r > 0 && r < size - 1 && c > 0 && c < size - 1) && (rdst == 0 || rdst == size - 1 || cdst == 0 || cdst == size - 1))
 						{
 							tile.direction = Direction.NONE;
 							tile.hasMoved = true;
@@ -170,6 +200,15 @@ public class SudokuBoard : MonoBehaviour {
 			}
 		} while (changed);
 		Debug.Log ("finished move");
+
+		// re-set outer ring movement if they failed to move in
+		for (int c = 0; c < size - 1; c++)
+		{
+			board[0,c].direction = Direction.RIGHT;
+			board[size - 1, c].direction = Direction.LEFT;
+			board[c,0].direction = Direction.UP;
+			board[c,size-1].direction = Direction.DOWN;
+		}
 	}
 	
 	public int GetTileDigit(int r, int c)
