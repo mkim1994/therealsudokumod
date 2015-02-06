@@ -31,8 +31,26 @@ public class SudokuBoard : MonoBehaviour {
 			for (int c = 0; c < size; c++)
 			{
 				board[r, c] = new Tile();
+				if(r == 0){
+					board[r,c].direction = Direction.RIGHT;
+				}
+				else if(r == 4){
+					board[r,c].direction = Direction.RIGHT;
+				}
+				else if(c == 0){
+					board[r,c].direction = Direction.UP;
+				}
+				else if(c == 4){
+					board[r,c].direction = Direction.DOWN;
+				}
+
 			}
 		}
+
+		board[0,1].digit = 1;
+		board[0,2].digit = 2;
+		board[0,3].digit = 3;
+
 	}
 	
 	void FixedUpdate () {
@@ -105,6 +123,7 @@ public class SudokuBoard : MonoBehaviour {
 		board[size - 1, 0].direction = Direction.UP;
 		
 		bool changed;
+		Debug.Log ("starting move");
 		do 
 		{
 			changed = false;
@@ -144,6 +163,7 @@ public class SudokuBoard : MonoBehaviour {
 				}
 			}
 		} while (changed);
+		Debug.Log ("finished move");
 	}
 	
 	public int GetTileDigit(int r, int c)
