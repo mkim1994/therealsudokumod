@@ -133,14 +133,14 @@ public class SudokuBoard : MonoBehaviour {
 				{
 					Tile tile = board[r, c];
 					// if the tile hasn't moved yet and wants to
-					if (!tile.hasMoved)
+					if (tile.digit > 0 && !tile.hasMoved)
 					{	
-						int rdst = r + (tile.direction == Direction.UP ? -1 : (tile.direction == Direction.DOWN ? 1 : 0));
-						int cdst = c + (tile.direction == Direction.LEFT ? -1 : (tile.direction == Direction.RIGHT ? 1 : 0));
-						
+						int rdst = r + ((tile.direction == Direction.UP) ? -1 : ((tile.direction == Direction.DOWN) ? 1 : 0));
+						int cdst = c + ((tile.direction == Direction.LEFT) ? -1 : ((tile.direction == Direction.RIGHT) ? 1 : 0));
 						// stop tiles from moving out of the board
-						if ((rdst < 0 || rdst > size - 1 || (c > 0 && c < size - 1 && (rdst == 0 || rdst == size - 1)))
-						    || (cdst < 0 || cdst > size - 1 || (r > 0 && r < size - 1 && (cdst == 0 || cdst == size - 1))))
+						//if ((rdst < 0 || rdst > size - 1 || ((cdst == 0 || cdst == size - 1) && (rdst != 0 || rdst != size - 1)))
+						//    || (cdst < 0 || cdst > size - 1 || ((rdst == 0 || rdst == size - 1) && (cdst > 0 || cdst < size - 1))))
+						if (rdst < 0 || rdst > size - 1 || cdst < 0 || cdst > size - 1)
 						{
 							tile.direction = Direction.NONE;
 							tile.hasMoved = true;
@@ -150,6 +150,7 @@ public class SudokuBoard : MonoBehaviour {
 						{
 							// move the tile to its destination
 							board[rdst, cdst].digit = tile.digit;
+							Debug.Log("Moved a " + tile.digit + "to tile (" + r + ", " + c + ")");
 							board[rdst, cdst].direction = tile.direction;
 							board[rdst, cdst].locked = tile.locked;
 							// mark it as fixed
