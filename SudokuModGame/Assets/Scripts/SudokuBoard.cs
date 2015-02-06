@@ -137,10 +137,15 @@ public class SudokuBoard : MonoBehaviour {
 					{	
 						int rdst = r + ((tile.direction == Direction.UP) ? -1 : ((tile.direction == Direction.DOWN) ? 1 : 0));
 						int cdst = c + ((tile.direction == Direction.LEFT) ? -1 : ((tile.direction == Direction.RIGHT) ? 1 : 0));
-						// stop tiles from moving out of the board
-						//if ((rdst < 0 || rdst > size - 1 || ((cdst == 0 || cdst == size - 1) && (rdst != 0 || rdst != size - 1)))
-						//    || (cdst < 0 || cdst > size - 1 || ((rdst == 0 || rdst == size - 1) && (cdst > 0 || cdst < size - 1))))
+
+						// error case - don't try to fall off the board
 						if (rdst < 0 || rdst > size - 1 || cdst < 0 || cdst > size - 1)
+						{
+							tile.direction = Direction.NONE;
+							tile.hasMoved = true;
+						}
+						// stop tiles in the middle from moving into the outer ring
+						else if ( (r > 0 && r < size - 1 && c < 0 && c < size - 1) && (rdst == 0 || rdst == size -1 || cdst == 0 || cdst == size - 1))
 						{
 							tile.direction = Direction.NONE;
 							tile.hasMoved = true;
