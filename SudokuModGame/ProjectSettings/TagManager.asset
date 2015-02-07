@@ -41,3 +41,7 @@ TagManager:
     userID: 0
     uniqueID: 0
     locked: 0
+  - name: Tiles
+    userID: 1
+    uniqueID: 3527722253
+    locked: 0
