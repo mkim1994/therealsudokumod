@@ -3,259 +3,225 @@ using System.Collections;
 
 public class SudokuBoard : MonoBehaviour {
 	
-	public enum Direction : byte { NONE, UP, DOWN, LEFT, RIGHT };
+	private int[,] board;
+	private int[,] ring;
+	private int size = 5;
+	private int fullmask;
 	
-	private class Tile {
-		public bool locked;
-		public int digit;		
-		public Direction direction;
-		public bool hasMoved; // used while updating the board
-		public Tile(){
-			this.locked = false;
-			this.digit = 0;
-			this.direction = Direction.NONE;
-		}
-	}
+	public float step_interval = 1.0f; // seconds between moves
 	
-	private Tile[,] board;
-	public int size = 5;
-	
-	private float step_interval = 1.0f; // seconds between moves
-	private float last_step = 0.0f; // time of last move
-	
-	// Use this for initialization
 	void Start () {
-		board = new Tile[size, size];
+		board = new int[size, size];
 		for (int r = 0; r < size; r++)
 		{
 			for (int c = 0; c < size; c++)
 			{
-				board[r, c] = new Tile();
-				if(r == 0){
-					board[r,c].direction = Direction.RIGHT;
-				}
-				else if(r == 4){
-					board[r,c].direction = Direction.LEFT;
-				}
-				else if(c == 0){
-					board[r,c].direction = Direction.UP;
-				}
-				else if(c == 4){
-					board[r,c].direction = Direction.DOWN;
-				}
+				board[r,c] = 0;
 			}
 		}
 
-		board[0,1].digit = 1;
-		board[0,2].digit = 2;
-		board[0,3].digit = 3;
-		board[4,1].digit = 3;
-		board[4,2].digit = 2;
-		board[4,3].digit = 1;
-		board[1,4].digit = 1;
-		board[2,4].digit = 2;
-		board[3,4].digit = 3;
-		board[3,0].digit = 1;
-		board[2,0].digit = 2;
-		board[1,0].digit = 3;
+		ring = new int[4, size - 1];
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < size - 1; j++)
+			{
+				ring[i, j] = 0;
+			}
+		}
 
+		fullmask = 0;
+		for (int i = 1; i <= size; i++)
+		{
+			fullmask |= (1 << i);
+		}
+
+		// start the regular board updates
+		InvokeRepeating("StepAll", 0, step_interval);
+	}
+
+	// put things to happen at a steady rate in here
+	// invoked from Start above
+	void StepAll()
+	{
+		// example code for basic game
+		StepRingClockwise(); // rotate one slot
+		ring[0, 0] = 0; // keep the top-left corner empty (destroy tiles that go all the way around)
+		ring[0, 1] = ((int) (Random.value * (size - 1))) + 1; // spawn a random tile out of the top-left corner
+		// DERP TEST - note there seems to be a bug with the firing. prototype things and help me find it :)
+		FireRightEdge();
 	}
 	
 	void FixedUpdate () {
-		if (Time.fixedTime - last_step > step_interval)
-		{
-			MoveTiles();
-			last_step = Time.fixedTime;
-		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKey(KeyCode.DownArrow))
-		{
-			SlideTopEdge();
-		}
-		else if (Input.GetKey(KeyCode.UpArrow))
-		{
-			SlideBottomEdge();
-		}
-		else if (Input.GetKey(KeyCode.LeftArrow))
-		{
-			SlideRightEdge();
-		}
-		else if (Input.GetKey(KeyCode.RightArrow))
-		{
-			SlideLeftEdge();
-		}
-
-		if (IsFull())
-		{
-			if (IsValid()) Debug.Log("You Win!");
-			//gameObject.enabled = false;
-		}
+		// don't put any code here, unless you are adding graphical effects to the board maybe
 	}
 	
-	// check if the board is completely filled (might be invalid!)
+	// check if the board is completely filled
 	public bool IsFull()
 	{
-		for (int r = 1; r < size - 1; r++)
+		for (int r = 0; r < size; r++)
 		{
-			for (int c = 1; c < size - 1; c++)
+			for (int c = 0; c < size; c++)
 			{
-				if (board[r, c].digit == 0)
+				if (board[r, c] == 0)
 					return false;
 			}
 		}
 		return true;
 	}
-	
-	// check if the board is finished correctly
-	// requires a complete board (no zeroes)
-	// THIS MUST CHANGE IF TILES ARE DESTROYED/REPLACED
-	public bool IsValid()
+
+	// check if the outside edge of the board is full
+	// (this means the player can't continue, even if the middle is not filled!)
+	public bool IsSurrounded()
 	{
-		for (int r = 1; r < size - 1; r++)
+		for (int i = 0; i < size; i++)
 		{
-			int sumr = 0;
-			int sumc = 0;
-			for (int c = 1; c < size - 1; c++)
-			{
-				sumr += board[r, c].digit;
-				sumc += board[c, r].digit;
-			}
-			if (sumr != 6 || sumc != 6) return false;
+			if ( (board[0, i] == 0) || (board[i, 0] == 0) || (board[size - 1, i] == 0) || (board[i, size - 1] == 0) )
+				return false;
 		}
 		return true;
 	}
 	
-	void MoveTiles() {
-		
-		// mark all tiles that need to move
-		for (int i = 0; i < size; i++) 
+	// check if the board is finished correctly
+	public bool IsValid()
+	{
+		for (int i = 0; i < size; i++)
 		{
+			int rowmask = 0;
+			int colmask = 0;
+
 			for (int j = 0; j < size; j++)
-			{			
-				if(board[i, j].digit > 0 && board[i, j].direction != Direction.NONE)
-				{
-					board[i, j].hasMoved = false;
-				}
-				else
-				{
-					board[i, j].hasMoved = true;
-				}
-			}
-		}
-		
-		// make tiles on the edge rotate around
-		board[0, 0].direction = Direction.RIGHT;
-		board[0, size - 1].direction = Direction.DOWN;
-		board[size - 1, size - 1].direction = Direction.LEFT;
-		board[size - 1, 0].direction = Direction.UP;
-		
-		bool changed;
-		Debug.Log ("starting move");
-		do 
-		{
-			changed = false;
-			for (int r = 0; r < size; r++)
 			{
-				for (int c = 0; c < size; c++)
-				{
-					Tile tile = board[r, c];
-					// if the tile hasn't moved yet and wants to
-					if (tile.digit > 0 && !tile.hasMoved)
-					{	
-						int rdst = r + ((tile.direction == Direction.UP) ? -1 : ((tile.direction == Direction.DOWN) ? 1 : 0));
-						int cdst = c + ((tile.direction == Direction.LEFT) ? -1 : ((tile.direction == Direction.RIGHT) ? 1 : 0));
-
-						// error case - don't try to fall off the board
-						if (rdst < 0 || rdst > size - 1 || cdst < 0 || cdst > size - 1)
-						{
-							tile.direction = Direction.NONE;
-							tile.hasMoved = true;
-						}
-						// stop tiles in the middle from moving into the outer ring
-						else if ( (r > 0 && r < size - 1 && c > 0 && c < size - 1) && (rdst == 0 || rdst == size - 1 || cdst == 0 || cdst == size - 1))
-						{
-							tile.direction = Direction.NONE;
-							tile.hasMoved = true;
-						}
-						// move a tile if its destination is empty
-						else if (board[rdst, cdst].digit == 0)
-						{
-							// move the tile to its destination
-							board[rdst, cdst].digit = tile.digit;
-							Debug.Log("Moved a " + tile.digit + "to tile (" + r + ", " + c + ")");
-							board[rdst, cdst].direction = tile.direction;
-							board[rdst, cdst].locked = tile.locked;
-							// mark it as fixed
-							board[rdst, cdst].hasMoved = true;
-							// clear its old location so another tile can move there
-							board[r, c].digit = 0;
-							board[r, c].hasMoved = true;
-							changed = true; // iterate until all dependencies have resolved
-						}
-					}
-				}
+				rowmask ^= (1 << board[i,j]);
+				colmask ^= (1 << board[j,i]);
 			}
-		} while (changed);
-		Debug.Log ("finished move");
 
-		// re-set outer ring movement if they failed to move in
-		for (int c = 0; c < size - 1; c++)
+			if ( (rowmask != fullmask) || (colmask != fullmask) )
+				return false;
+		}
+		return true;
+	}
+
+	// move all tiles in the ring - does not handle spawning / despawning
+	public void StepRingClockwise()
+	{
+		int tmp = ring[3, 3];
+		for (int i = 3; i >= 0; i--)
 		{
-			board[0,c].direction = Direction.RIGHT;
-			board[size - 1, c].direction = Direction.LEFT;
-			board[c,0].direction = Direction.UP;
-			board[c,size-1].direction = Direction.DOWN;
+			for (int j = 3; j > 0; j--)
+			{
+				ring[i, j] = ring[i, j - 1];
+			}
+			ring[i, 0] = (i > 0) ? ring[i - 1, 3] : tmp;
 		}
 	}
-	
-	public int GetTileDigit(int r, int c)
-	{
-		if (0 <= r && r < size && 0 <= c && c < size)
-			return board[r, c].digit;
-		else
-			throw new System.Exception("E_IndexOutOfRange");
-	}
-	
-	public void SetDirection(int r, int c, Direction d)
-	{
-		if (0 <= r && r < size && 0 <= c && c < size)
-			board[r, c].direction = d;
-		else
-			throw new System.Exception("E_IndexOutOfRange");
-	}
-	
-	public void SlideTopEdge()
-	{
-		for (int c = 1; c < size - 1; c++)
+
+	public void StepRingCounterClockwise()
+	{	
+		int tmp = ring[0, 0];
+		for (int i = 0; i < 4; i++)
 		{
-			SetDirection(0, c, Direction.DOWN);
+			for (int j = 0; j < 3; j++)
+			{
+				ring[i, j] = ring[i, j + 1];
+			}
+			ring[i, 3] = (i < 3) ? ring[i + 1, 0] : tmp;
 		}
 	}
-	
-	public void SlideBottomEdge()
+
+	public int GetBoardDigit(int row, int col)
 	{
-		for (int c = 1; c < size - 1; c++)
-		{
-			SetDirection(size - 1, c, Direction.UP);
-		}
+		return board[row, col];
+	}
+
+	public int GetRingDigit(int side, int idx)
+	{
+		return ring[side, idx];
 	}
 	
-	public void SlideLeftEdge()
+	// reads the value from a ring tile, and puts it as far into the board as it can go
+	// returns true if the piece was moved; if the piece was blocked in the outer row,
+	// returns false and does not modify the ring
+	//
+	// you can trigger animations based on the return value!
+	public bool FireRingTile(int side, int idx)
 	{
-		for (int r = 1; r < size - 1; r++)
+		if (ring[side, idx] == 0) return false; // that ring tile is empty!
+
+		if (idx == 0) return false; // I can't move corner pieces!
+
+		int row, col, dx, dy;
+
+		if (side == 0)
 		{
-			SetDirection(r, 0, Direction.RIGHT);
+			row = 0;
+			col = idx - 1;
+			dy = 1;
+			dx = 0;
 		}
+		else if (side == 2) 
+		{
+			row = size - 1;
+			col = size - 1 - idx;
+			dy = -1;
+			dx = 0;
+		}
+		else if (side == 1)
+		{
+			row = idx - 1;
+			col = size - 1;
+			dx = -1;
+			dy = 0;
+		}
+		else if (side == 3)
+		{
+			row = size - 1 - idx;
+			col = 0;
+			dx = 1;
+			dy = 0;
+		}
+		else return false; // invalid side or idx!
+
+		if (board[row, col] != 0) return false; // the first slot is blocked!
+
+		// find the farthest empty slot in that direction
+		for (int i = 0; i < size - 1; i++)
+		{
+			if (board[row + dy, col + dx] == 0)
+			{
+				row += dy;
+				col += dx;
+			}
+		}
+
+		board[row, col] = ring[side, idx];
+		ring[side, idx] = 0;
+		return true;
 	}
-	
-	public void SlideRightEdge()
+
+
+	// utility functions for prototyping whole-side swipes
+	public void FireTopEdge()
 	{
-		for (int r = 1; r < size - 1; r++)
-		{
-			SetDirection(r, size - 1, Direction.LEFT);
-		}
+		for (int i = 1; i < 4; i++)
+			FireRingTile(0, i);
+	}
+	public void FireRightEdge()
+	{
+		for (int i = 1; i < 4; i++)
+			FireRingTile(1, i);
+	}
+	public void FireBottomEdge()
+	{
+		for (int i = 1; i < 4; i++)
+			FireRingTile(2, i);
+	}
+	public void FireLeftEdge()
+	{
+		for (int i = 1; i < 4; i++)
+			FireRingTile(3, i);
 	}
 }

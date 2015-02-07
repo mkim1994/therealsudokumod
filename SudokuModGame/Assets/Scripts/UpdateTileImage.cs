@@ -10,6 +10,8 @@ public class UpdateTileImage : MonoBehaviour {
 	public Sprite tile2;
 	public Sprite tile3;
 
+	public bool isBoard;
+
 	SpriteRenderer sp;
 
 	public int myrow, mycol;
@@ -22,7 +24,7 @@ public class UpdateTileImage : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		int mydigit = board.GetTileDigit(myrow, mycol);
+		int mydigit = isBoard ? board.GetBoardDigit(myrow, mycol) : board.GetRingDigit(myrow, mycol);
 		if (mydigit == 0)
 			sp.color = new Color(0,0,0,0);
 		else
