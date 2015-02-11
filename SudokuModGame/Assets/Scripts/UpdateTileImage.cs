@@ -3,7 +3,7 @@ using System.Collections;
 
 public class UpdateTileImage : MonoBehaviour {
 
-	public SudokuBoard board;
+	public BenSudokuBoard board;
 
 	public Sprite tile0;
 	public Sprite tile1;
@@ -18,7 +18,7 @@ public class UpdateTileImage : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		board = GetComponentInParent<SudokuBoard>();
+		board = GetComponentInParent<BenSudokuBoard>();
 		sp = GetComponent<SpriteRenderer>();
 	}
 	

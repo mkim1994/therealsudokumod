@@ -56,7 +56,7 @@ public class BenSudokuBoard : MonoBehaviour {
 		else {
 			ring [0, 1] = 0; // spawn empty tile
 			}
-		if (step_interval > min_step_interval) {
+		if (step_interval > min_step_interval && step > 15) {
 			step_interval = step_interval / step_acceleration; //speed up 
 			}
 		audio.PlayOneShot(blarg, 0.7F);
