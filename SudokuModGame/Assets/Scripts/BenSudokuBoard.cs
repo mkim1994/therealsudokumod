@@ -12,6 +12,7 @@ public class BenSudokuBoard : MonoBehaviour {
 	public float step_interval = 1.0f; // seconds between moves
 	public float min_step_interval = 0.3f; //maximum spawn and rotate speed
 	public float step_acceleration = 1.05f; //how fast game speeds up (1.0 = constant)
+	public AudioClip blarg;
 	
 	void Start () {
 		board = new int[size, size];
@@ -55,9 +56,10 @@ public class BenSudokuBoard : MonoBehaviour {
 		else {
 			ring [0, 1] = 0; // spawn empty tile
 			}
-		if (step_interval < min_step_interval) {
+		if (step_interval > min_step_interval) {
 			step_interval = step_interval / step_acceleration; //speed up 
 			}
+		audio.PlayOneShot(blarg, 0.7F);
 		Invoke ("StepAll", step_interval);
 		step += 1;
 	}
