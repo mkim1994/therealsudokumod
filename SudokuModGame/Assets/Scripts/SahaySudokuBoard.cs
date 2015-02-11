@@ -1,17 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BenSudokuBoard : MonoBehaviour {
+public class SahaySudokuBoard : MonoBehaviour {
 	
 	private int[,] board;
 	private int[,] ring;
 	private int size = 5;
 	private int fullmask;
-	private int step = 0; //set to negative for a delay before tiles spawn
 	
 	public float step_interval = 1.0f; // seconds between moves
-	public float min_step_interval = 0.3f; //maximum spawn and rotate speed
-	public float step_acceleration = 1.05f; //how fast game speeds up (1.0 = constant)
 	
 	void Start () {
 		board = new int[size, size];
@@ -39,7 +36,7 @@ public class BenSudokuBoard : MonoBehaviour {
 		}
 
 		// start the regular board updates
-		Invoke("StepAll", step_interval);
+		InvokeRepeating("StepAll", 0, step_interval);
 	}
 
 	// put things to happen at a steady rate in here
@@ -49,17 +46,9 @@ public class BenSudokuBoard : MonoBehaviour {
 		// example code for basic game
 		StepRingClockwise(); // rotate one slot
 		ring[0, 0] = 0; // keep the top-left corner empty (destroy tiles that go all the way around)
-		if (step % 2 == 1 && step > 0) {
-			ring [0, 1] = ((int)(Random.value * (size - 2))) + 1; // spawn a random tile out of the top-left corner
-			} 
-		else {
-			ring [0, 1] = 0; // spawn empty tile
-			}
-		if (step_interval < min_step_interval) {
-			step_interval = step_interval / step_acceleration; //speed up 
-			}
-		Invoke ("StepAll", step_interval);
-		step += 1;
+		ring[0, 1] = ((int) (Random.value * (size - 2))) + 1; // spawn a random tile out of the top-left corner
+		// DERP TEST - note there seems to be a bug with the firing. prototype things and help me find it :)
+		FireRightEdge();
 	}
 	
 	void FixedUpdate () {
@@ -119,6 +108,7 @@ public class BenSudokuBoard : MonoBehaviour {
 	// move all tiles in the ring - does not handle spawning / despawning
 	public void StepRingClockwise()
 	{
+		audio.Play();
 		int tmp = ring[3, 3];
 		for (int i = 3; i >= 0; i--)
 		{
@@ -160,7 +150,6 @@ public class BenSudokuBoard : MonoBehaviour {
 	// you can trigger animations based on the return value!
 	public bool FireRingTile(int side, int idx)
 	{
-		Debug.Log ("fire");
 		if (ring[side, idx] == 0) return false; // that ring tile is empty!
 
 		if (idx == 0) return false; // I can't move corner pieces!
@@ -176,21 +165,21 @@ public class BenSudokuBoard : MonoBehaviour {
 		}
 		else if (side == 2) 
 		{
-			row = size - 3;
-			col = size - 2 - idx;
+			row = size - 1;
+			col = size - 1 - idx;
 			dy = -1;
 			dx = 0;
 		}
 		else if (side == 1)
 		{
 			row = idx - 1;
-			col = size - 3;
+			col = size - 1;
 			dx = -1;
 			dy = 0;
 		}
 		else if (side == 3)
 		{
-			row = size - 2 - idx;
+			row = size - 1 - idx;
 			col = 0;
 			dx = 1;
 			dy = 0;
@@ -200,7 +189,7 @@ public class BenSudokuBoard : MonoBehaviour {
 		if (board[row, col] != 0) return false; // the first slot is blocked!
 
 		// find the farthest empty slot in that direction
-		for (int i = 0; i < size - 3; i++)
+		for (int i = 0; i < size - 1; i++)
 		{
 			if (board[row + dy, col + dx] == 0)
 			{
