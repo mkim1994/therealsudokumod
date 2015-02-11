@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SudokuBoard : MonoBehaviour {
+public class BenSudokuBoard : MonoBehaviour {
 	
 	private int[,] board;
 	private int[,] ring;
@@ -12,6 +12,7 @@ public class SudokuBoard : MonoBehaviour {
 	public float step_interval = 1.0f; // seconds between moves
 	public float min_step_interval = 0.3f; //maximum spawn and rotate speed
 	public float step_acceleration = 1.05f; //how fast game speeds up (1.0 = constant)
+	public AudioClip blarg;
 	
 	void Start () {
 		board = new int[size, size];
@@ -50,14 +51,15 @@ public class SudokuBoard : MonoBehaviour {
 		StepRingClockwise(); // rotate one slot
 		ring[0, 0] = 0; // keep the top-left corner empty (destroy tiles that go all the way around)
 		if (step % 2 == 1 && step > 0) {
-			ring [0, 1] = ((int)(Random.value * (size - 1))) + 1; // spawn a random tile out of the top-left corner
+			ring [0, 1] = ((int)(Random.value * (size - 2))) + 1; // spawn a random tile out of the top-left corner
 			} 
 		else {
 			ring [0, 1] = 0; // spawn empty tile
 			}
-		if (step_interval < min_step_interval) {
+		if (step_interval > min_step_interval) {
 			step_interval = step_interval / step_acceleration; //speed up 
 			}
+		audio.PlayOneShot(blarg, 0.7F);
 		Invoke ("StepAll", step_interval);
 		step += 1;
 	}
