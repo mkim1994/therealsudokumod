@@ -75,9 +75,9 @@ public class BenSudokuBoard : MonoBehaviour {
 	// check if the board is completely filled
 	public bool IsFull()
 	{
-		for (int r = 0; r < size; r++)
+		for (int r = 0; r < size - 2; r++)
 		{
-			for (int c = 0; c < size; c++)
+			for (int c = 0; c < size - 2; c++)
 			{
 				if (board[r, c] == 0)
 					return false;
@@ -101,19 +101,23 @@ public class BenSudokuBoard : MonoBehaviour {
 	// check if the board is finished correctly
 	public bool IsValid()
 	{
-		for (int i = 0; i < size; i++)
+		for (int myrow = 0; myrow < size - 2; myrow++)
 		{
-			int rowmask = 0;
-			int colmask = 0;
-
-			for (int j = 0; j < size; j++)
+			for (int mycol = 0; mycol < size - 2; mycol++)
 			{
-				rowmask ^= (1 << board[i,j]);
-				colmask ^= (1 << board[j,i]);
-			}
+				for (int row = 0; row < size - 2; row++)
+				{
+					for (int col = 0; col < size - 2; col++)
+					{
+						if (col != mycol || row != myrow) // dont check self
+						{
+							if (col != mycol && (board[myrow,col] == board[myrow,mycol])){return false;}
+							else if (row != myrow && (board[row,mycol] == board[myrow,mycol])){return false;}
+						}
+					}
+				}
 
-			if ( (rowmask != fullmask) || (colmask != fullmask) )
-				return false;
+			}
 		}
 		return true;
 	}
@@ -162,7 +166,6 @@ public class BenSudokuBoard : MonoBehaviour {
 	// you can trigger animations based on the return value!
 	public bool FireRingTile(int side, int idx)
 	{
-		Debug.Log ("fire");
 		if (ring[side, idx] == 0) return false; // that ring tile is empty!
 
 		if (idx == 0) return false; // I can't move corner pieces!
@@ -213,6 +216,14 @@ public class BenSudokuBoard : MonoBehaviour {
 
 		board[row, col] = ring[side, idx];
 		ring[side, idx] = 0;
+
+		if (IsFull() == true) {
+				if (IsValid () == true) {
+						Debug.Log ("you win");
+				} else {
+						Debug.Log ("you lose");
+				}
+			}
 		return true;
 	}
 
