@@ -1,0 +1,114 @@
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+public class BoardManager : MonoBehaviour {
+
+	public MovingTile prefab; // prefab to create clickable tiles
+	private List<MovingTile> tiles; // references to active tiles
+
+	private int size = 5;
+	private int[,] board;
+
+	private int step_count = 0;
+	public float step_interval = 1.0f;
+	public float min_step_interval = 0.3f; //maximum spawn and rotate speed
+	public float step_acceleration = 1.05f;
+	public AudioClip blarg;
+
+	// Use this for initialization
+	void Start () {
+		// create the board
+		board = new int[size, size];
+		for (int r = 0; r < size; r++)
+		{
+			for (int c = 0; c < size; c++)
+			{
+				board[r,c] = 0;
+			}
+		}
+
+		tiles = new List<MovingTile>();
+
+		// start the game
+		Invoke("Step", step_interval);
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		// LEAVE EMPTY
+	}
+
+	// step the board state, spawning and updating tiles
+	void Step()
+	{
+		// signal all the tiles to rotate forward
+		foreach (MovingTile tile in tiles)
+		{
+			tile.move_clockwise();
+		}
+
+		// spawn a new tile on odd steps
+		if (step_count % 2 == 1)
+		{
+			MovingTile tile = (MovingTile) Instantiate(prefab);
+			tiles.Add(tile);
+		}
+	}
+
+	public int Size()
+	{
+		return size;
+	}
+
+	// check if the board is completely filled
+	public bool IsFull()
+	{
+		for (int r = 0; r < size - 2; r++)
+		{
+			for (int c = 0; c < size - 2; c++)
+			{
+				if (board[r, c] == 0)
+					return false;
+			}
+		}
+		return true;
+	}
+
+	// check if the outside edge of the board is full
+	// (this means the player can't continue, even if the middle is not filled!)
+	public bool IsSurrounded()
+	{
+		for (int i = 0; i < size; i++)
+		{
+			if ( (board[0, i] == 0) || (board[i, 0] == 0) || (board[size - 1, i] == 0) || (board[i, size - 1] == 0) )
+				return false;
+		}
+		return true;
+	}
+	
+	// check if the board is finished correctly
+	public bool IsValid()
+	{
+		for (int myrow = 0; myrow < size - 2; myrow++)
+		{
+			for (int mycol = 0; mycol < size - 2; mycol++)
+			{
+				for (int row = 0; row < size - 2; row++)
+				{
+					for (int col = 0; col < size - 2; col++)
+					{
+						if (col != mycol || row != myrow) // dont check self
+						{
+							if (col != mycol && (board[myrow,col] == board[myrow,mycol])){return false;}
+							else if (row != myrow && (board[row,mycol] == board[myrow,mycol])){return false;}
+						}
+					}
+				}
+
+			}
+		}
+		return true;
+	}
+
+}
