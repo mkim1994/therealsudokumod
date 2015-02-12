@@ -130,9 +130,9 @@ public class BenSudokuBoard : MonoBehaviour {
 		{
 			for (int j = 3; j > 0; j--)
 			{
-				ring[i, j] = ring[i, j - 1];
+				ring[i, j] = ring[i, j - 1]; // put animations here
 			}
-			ring[i, 0] = (i > 0) ? ring[i - 1, 3] : tmp;
+			ring[i, 0] = (i > 0) ? ring[i - 1, 3] : tmp; //put animation here
 		}
 	}
 
