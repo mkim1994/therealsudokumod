@@ -42,9 +42,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   board: {fileID: 0}
   tile0: {fileID: 0}
-  tile1: {fileID: 21300000, guid: d92469bc8cbd9704180eb7797270459d, type: 3}
-  tile2: {fileID: 21300000, guid: db3ebe2dc3627e34bb2f027e68f48864, type: 3}
-  tile3: {fileID: 21300000, guid: f80a513ad127639428b23791afbcce70, type: 3}
+  tile1: {fileID: 21300000, guid: d936314bcb1823a4a9e7334cb31f663c, type: 3}
+  tile2: {fileID: 21300000, guid: 9f7a0dd9bc472cd44a13036398cbe8f4, type: 3}
+  tile3: {fileID: 21300000, guid: cc2f12940b663bb429f724c1158f9cfb, type: 3}
+  isBoard: 0
   myrow: 2
   mycol: 2
 --- !u!212 &21205274

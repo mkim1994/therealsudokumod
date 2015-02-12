@@ -41,6 +41,14 @@ TagManager:
     userID: 0
     uniqueID: 0
     locked: 0
+  - name: Background
+    userID: 2
+    uniqueID: 1361693803
+    locked: 0
+  - name: Grid
+    userID: 3
+    uniqueID: 2366956025
+    locked: 0
   - name: Tiles
     userID: 1
     uniqueID: 3527722253
