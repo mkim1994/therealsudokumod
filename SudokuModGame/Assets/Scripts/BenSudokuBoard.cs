@@ -254,4 +254,12 @@ public class BenSudokuBoard : MonoBehaviour {
 		for (int i = 1; i < 4; i++)
 			FireRingTile(3, i);
 	}
+	public void restartLevel()
+	{
+		Application.LoadLevel(Application.loadedLevel);
+	}
+	public void restart()
+	{
+		Invoke("restartLevel", 0.1f);
+	}
 }
