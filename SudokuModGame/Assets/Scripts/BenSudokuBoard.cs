@@ -227,6 +227,11 @@ public class BenSudokuBoard : MonoBehaviour {
 		return true;
 	}
 
+	public void SlideOne(string i)
+	{
+		int idx = int.Parse (i);
+		FireRingTile (idx / 4, idx % 4);
+		}
 
 	// utility functions for prototyping whole-side swipes
 	public void FireTopEdge()
