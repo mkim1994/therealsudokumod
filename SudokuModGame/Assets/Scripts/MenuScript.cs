@@ -17,7 +17,7 @@ public class MenuScript : MonoBehaviour
 		Invoke("loadlevel", 0.0f);
 	}
 	void loadlevel(){
-		Application.LoadLevel("MelTest");
+		Application.LoadLevel("FelipeTest");
 	}
 
 	public void quitbutton(){

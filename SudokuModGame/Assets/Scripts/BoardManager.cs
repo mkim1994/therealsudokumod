@@ -10,11 +10,17 @@ public class BoardManager : MonoBehaviour {
 	public Sprite[] sprites;
 	public Vector3[] board_positions; // seems like unity cant handle 2d arrays
 	public Vector3[] ring_positions;
+	public SpriteRenderer winScreen;
+	public SpriteRenderer loseScreen;
+	public SpriteRenderer greythingy;
+	public SpriteRenderer nextLevelButtonGreyThingy;
+	public bool gameWin;
 
 	public MovingTile prefab; // prefab to create clickable tiles
 	private List<MovingTile> tiles; // references to active tiles
 	private List<MovingTile> board_tiles; // dead tiles in the board
 	public int spawn_slot = 1; // the ring slot of the spawn point
+	private bool gameRunning = true;
 
 	public int size = 3;
 	private int[,] board;	
@@ -24,6 +30,7 @@ public class BoardManager : MonoBehaviour {
 	public float min_step_interval = 0.3f; //maximum spawn and rotate speed
 	public float step_acceleration = 0.95f;
 	public AudioClip blarg;
+
 
 	private int[] counts;
 
@@ -44,6 +51,7 @@ public class BoardManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		gameWin = false;
 		// create the board
 		board = new int[size, size];
 		for (int r = 0; r < size; r++)
@@ -72,60 +80,57 @@ public class BoardManager : MonoBehaviour {
 	// step the board state, spawning and updating tiles
 	void Step()
 	{
-		step_count += 1;
+				step_count += 1;
 
-		float time = Time.realtimeSinceStartup;
-		// signal all the tiles to rotate forward
-		foreach (MovingTile tile in tiles)
-		{
-			tile.slot = (tile.slot + 1) % (4 * (size + 1));
-			tile.transform.position = ring_positions[tile.slot];
-			tile.old_position = ring_positions[tile.slot];
-			if (tile.slot == 0)
-			{
-				counts[tile.digit - 1] -= 1;
-				StartCoroutine(tile.Kill());
-			}
-			else
-			{
-				tile.tickTime = time;
-				tile.step_interval = step_interval;
-				tile.next_position = ring_positions[(tile.slot + 1) % (4 * (size + 1))];
-			}				
+				float time = Time.realtimeSinceStartup;
+				if (gameRunning == true) {
+
+						// signal all the tiles to rotate forward
+						foreach (MovingTile tile in tiles) {
+								tile.slot = (tile.slot + 1) % (4 * (size + 1));
+								tile.transform.position = ring_positions [tile.slot];
+								tile.old_position = ring_positions [tile.slot];
+								if (tile.slot == 0) {
+										counts [tile.digit - 1] -= 1;
+										StartCoroutine (tile.Kill ());
+								} else {
+										tile.tickTime = time;
+										tile.step_interval = step_interval;
+										tile.next_position = ring_positions [(tile.slot + 1) % (4 * (size + 1))];
+								}		
+						}
+
+						// remove tiles that made it all the way around
+						tiles.RemoveAll (tile => tile.slot == 0);
+
+						// spawn a new tile on odd steps
+						if (step_count % 2 == 1) {
+								MovingTile tile = (MovingTile)Instantiate (prefab, ring_positions [spawn_slot], Quaternion.identity);
+								tile.transform.SetParent (canvas.transform);
+								tile.board = this; // give the tile a reference to query the board
+
+								tile.slot = spawn_slot;
+								tile.old_position = ring_positions [spawn_slot];
+								tile.next_position = ring_positions [spawn_slot + 1];
+								tile.digit = 1 + genRandomDigit ();
+								tile.tickTime = time;
+								tile.step_interval = step_interval;
+
+								Image tileImage = tile.GetComponent<Image> ();
+								tileImage.sprite = sprites [tile.digit - 1];
+
+								tiles.Add (tile);
+						}
+
+						if (step_interval > min_step_interval && step_count > 15) {
+								step_interval = step_interval * step_acceleration;
+						}
+
+						audio.PlayOneShot (blarg, 0.7F);
+
+						Invoke ("Step", step_interval);		
+				}
 		}
-
-		// remove tiles that made it all the way around
-		tiles.RemoveAll(tile => tile.slot == 0);
-
-		// spawn a new tile on odd steps
-		if (step_count % 2 == 1)
-		{
-			MovingTile tile = (MovingTile) Instantiate(prefab, ring_positions[spawn_slot], Quaternion.identity);
-			tile.transform.SetParent(canvas.transform);
-			tile.board = this; // give the tile a reference to query the board
-
-			tile.slot = spawn_slot;
-			tile.old_position = ring_positions[spawn_slot];
-			tile.next_position = ring_positions[spawn_slot + 1];
-			tile.digit = 1 + genRandomDigit();
-			tile.tickTime = time;
-			tile.step_interval = step_interval;
-
-			Image tileImage = tile.GetComponent<Image>();
-			tileImage.sprite = sprites[tile.digit - 1];
-
-			tiles.Add(tile);
-		}
-
-		if (step_interval > min_step_interval && step_count > 15) 
-		{
-			step_interval = step_interval * step_acceleration;
-		}
-
-		audio.PlayOneShot(blarg, 0.7F);
-
-		Invoke ("Step", step_interval);		
-	}
 
 	public int Size()
 	{
@@ -178,9 +183,6 @@ public class BoardManager : MonoBehaviour {
 			return false; // error
 		}
 
-		Debug.Log ("Firing from: (" + x + ", " + y +")");
-		Debug.Log ("Direction: (" + dx + ", " + dy + ")");
-
 		int tx = x + dx;
 		int ty = y + dy;
 
@@ -202,15 +204,37 @@ public class BoardManager : MonoBehaviour {
 		tile.next_position = board_positions[ty * size + tx];
 		tiles.Remove(tile);
 		board_tiles.Add(tile);
+
+		if (IsFull() == true) {
+			gameRunning = false;
+			greythingy.enabled = true;
+			if (IsValid () == true) {
+				Invoke("WinGame", 1.5f);
+			} else {
+				Invoke("LoseGame", 1.5f);
+			}
+		}
+
 		return true;
 	}
+
+	public void LoseGame(){
+		loseScreen.enabled = true;
+	}
+
+	public void WinGame(){
+		winScreen.enabled = true;
+		nextLevelButtonGreyThingy.enabled = false;
+		gameWin = true;
+	}
+
 
 	// check if the board is completely filled
 	public bool IsFull()
 	{
-		for (int r = 0; r < size - 2; r++)
+		for (int r = 0; r < size; r++)
 		{
-			for (int c = 0; c < size - 2; c++)
+			for (int c = 0; c < size; c++)
 			{
 				if (board[r, c] == 0)
 					return false;
@@ -234,13 +258,13 @@ public class BoardManager : MonoBehaviour {
 	// check if the board is finished correctly
 	public bool IsValid()
 	{
-		for (int myrow = 0; myrow < size - 2; myrow++)
+		for (int myrow = 0; myrow < size; myrow++)
 		{
-			for (int mycol = 0; mycol < size - 2; mycol++)
+			for (int mycol = 0; mycol < size; mycol++)
 			{
-				for (int row = 0; row < size - 2; row++)
+				for (int row = 0; row < size; row++)
 				{
-					for (int col = 0; col < size - 2; col++)
+					for (int col = 0; col < size; col++)
 					{
 						if (col != mycol || row != myrow) // dont check self
 						{
@@ -253,6 +277,23 @@ public class BoardManager : MonoBehaviour {
 			}
 		}
 		return true;
+	}
+
+	public void restartLevel()
+	{
+		gameRunning = true;
+		Application.LoadLevel(Application.loadedLevel);
+	}
+	public void restart()
+	{
+		Invoke("restartLevel", 0.1f);
+	}
+
+	public void nextLevel()
+	{
+		if (gameWin == true) {
+			Invoke ("restartLevel", 0.1f);
+		}
 	}
 
 }
