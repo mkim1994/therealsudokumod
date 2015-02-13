@@ -10,6 +10,8 @@ public class MovingTile : MonoBehaviour {
 
 	public BoardManager board;
 
+	public float tickTime;
+	public float step_interval;
 	public Vector3 old_position;
 	public Vector3 next_position;
 
@@ -20,7 +22,8 @@ public class MovingTile : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// todo: make this an increasing ramp, not smooth slowdown
-		transform.position = Vector3.Lerp(transform.position, next_position, smooth * Time.deltaTime);
+		float delta = (Time.realtimeSinceStartup - tickTime) / step_interval;
+		transform.position = Vector3.Lerp(old_position, next_position, delta * delta);
 	}
 
 	// on button click: attempt to insert into board
@@ -28,8 +31,6 @@ public class MovingTile : MonoBehaviour {
 	{
 		// this is weird...
 		board.FireTile(this); 
-
-		Debug.Log("DID SOMETHING");
 	}
 
 	public IEnumerator Kill()

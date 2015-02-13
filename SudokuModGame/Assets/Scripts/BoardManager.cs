@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
 public class BoardManager : MonoBehaviour {
+
+	public Canvas canvas;
 
 	public Sprite[] sprites;
 	public Vector3[] board_positions; // seems like unity cant handle 2d arrays
@@ -13,7 +16,7 @@ public class BoardManager : MonoBehaviour {
 	private List<MovingTile> board_tiles; // dead tiles in the board
 	public int spawn_slot = 1; // the ring slot of the spawn point
 
-	public int size = 5;
+	public int size = 3;
 	private int[,] board;	
 
 	private int step_count = 0;
@@ -26,7 +29,7 @@ public class BoardManager : MonoBehaviour {
 
 	private int genRandomDigit()
 	{
-		int r = Random.Range(1, size);
+		int r = Random.Range(0, size);
 		for (int i = 0; i < size; i++)
 		{
 			int digit = (r + i) % size;
@@ -71,6 +74,7 @@ public class BoardManager : MonoBehaviour {
 	{
 		step_count += 1;
 
+		float time = Time.realtimeSinceStartup;
 		// signal all the tiles to rotate forward
 		foreach (MovingTile tile in tiles)
 		{
@@ -79,10 +83,13 @@ public class BoardManager : MonoBehaviour {
 			tile.old_position = ring_positions[tile.slot];
 			if (tile.slot == 0)
 			{
+				counts[tile.digit - 1] -= 1;
 				StartCoroutine(tile.Kill());
 			}
 			else
 			{
+				tile.tickTime = time;
+				tile.step_interval = step_interval;
 				tile.next_position = ring_positions[(tile.slot + 1) % (4 * (size + 1))];
 			}				
 		}
@@ -94,15 +101,18 @@ public class BoardManager : MonoBehaviour {
 		if (step_count % 2 == 1)
 		{
 			MovingTile tile = (MovingTile) Instantiate(prefab, ring_positions[spawn_slot], Quaternion.identity);
+			tile.transform.SetParent(canvas.transform);
 			tile.board = this; // give the tile a reference to query the board
 
 			tile.slot = spawn_slot;
 			tile.old_position = ring_positions[spawn_slot];
 			tile.next_position = ring_positions[spawn_slot + 1];
-			tile.digit = genRandomDigit();
+			tile.digit = 1 + genRandomDigit();
+			tile.tickTime = time;
+			tile.step_interval = step_interval;
 
-			SpriteRenderer tileSprite = tile.GetComponent<SpriteRenderer>();
-			tileSprite.sprite = sprites[tile.digit];
+			Image tileImage = tile.GetComponent<Image>();
+			tileImage.sprite = sprites[tile.digit - 1];
 
 			tiles.Add(tile);
 		}
@@ -145,7 +155,7 @@ public class BoardManager : MonoBehaviour {
 		else if (d == 1)
 		{
 			x = size;
-			y = m + 1;
+			y = m - 1;
 			dx = -1;
 			dy = 0;
 		}
@@ -168,11 +178,14 @@ public class BoardManager : MonoBehaviour {
 			return false; // error
 		}
 
+		Debug.Log ("Firing from: (" + x + ", " + y +")");
+		Debug.Log ("Direction: (" + dx + ", " + dy + ")");
+
 		int tx = x + dx;
 		int ty = y + dy;
 
 		// check if the first row is blocked (tile stays in ring)
-		if (board[x + dx, y + dy] != 0) return false;
+		if (board[tx, ty] != 0) return false;
 
 		// find the final position
 		while (tx + dx >= 0 && tx + dx < size 
