@@ -194,9 +194,9 @@ MonoBehaviour:
   prefab: {fileID: 11457878, guid: 722fd95fcd265bf47904353d6fe4c04e, type: 2}
   spawn_slot: 1
   size: 3
-  step_interval: .100000001
-  min_step_interval: .300000012
-  step_acceleration: .970000029
+  step_interval: .649999976
+  min_step_interval: .649999976
+  step_acceleration: 1
   blarg: {fileID: 8300000, guid: 8762485392287df4ea1f20367c0de27f, type: 3}
 --- !u!82 &106573627
 AudioSource:
