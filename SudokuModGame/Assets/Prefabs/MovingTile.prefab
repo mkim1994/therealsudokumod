@@ -11,7 +11,7 @@ GameObject:
   - 212: {fileID: 21257880}
   - 114: {fileID: 11457878}
   - 114: {fileID: 11457880}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: MovingTile
   m_TagString: Tile
   m_Icon: {fileID: 0}
@@ -43,8 +43,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   digit: 0
   slot: 0
-  state: 0
+  smooth: .949999988
   board: {fileID: 0}
+  old_position: {x: 0, y: 0, z: 0}
+  next_position: {x: 0, y: 0, z: 0}
 --- !u!114 &11457880
 MonoBehaviour:
   m_ObjectHideFlags: 1

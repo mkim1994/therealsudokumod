@@ -5,13 +5,15 @@ using System.Collections.Generic;
 public class BoardManager : MonoBehaviour {
 
 	public Sprite[] sprites;
+	public Vector3[] board_positions; // seems like unity cant handle 2d arrays
+	public Vector3[] ring_positions;
 
 	public MovingTile prefab; // prefab to create clickable tiles
 	private List<MovingTile> tiles; // references to active tiles
-	public Vector3 spawn_position = new Vector3(-4.77f, 9.76f, 0); // the spawn point
-	public int spawn_slot = 0; // the ring slot of the spawn point
+	private List<MovingTile> board_tiles; // dead tiles in the board
+	public int spawn_slot = 1; // the ring slot of the spawn point
 
-	private int size = 5;
+	public int size = 5;
 	private int[,] board;	
 
 	private int step_count = 0;
@@ -33,6 +35,7 @@ public class BoardManager : MonoBehaviour {
 		}
 
 		tiles = new List<MovingTile>();
+		board_tiles = new List<MovingTile>();
 
 		// start the game
 		Invoke("Step", step_interval);
@@ -51,17 +54,32 @@ public class BoardManager : MonoBehaviour {
 		// signal all the tiles to rotate forward
 		foreach (MovingTile tile in tiles)
 		{
-			tile.move_clockwise();
+			tile.slot = (tile.slot + 1) % (4 * (size + 1));
+			tile.transform.position = ring_positions[tile.slot];
+			tile.old_position = ring_positions[tile.slot];
+			if (tile.slot == 0)
+			{
+				StartCoroutine(tile.Kill());
+			}
+			else
+			{
+				tile.next_position = ring_positions[(tile.slot + 1) % (4 * (size + 1))];
+			}				
 		}
+
+		// remove tiles that made it all the way around
+		tiles.RemoveAll(tile => tile.slot == 0);
 
 		// spawn a new tile on odd steps
 		if (step_count % 2 == 1)
 		{
-			MovingTile tile = (MovingTile) Instantiate(prefab, spawn_position, Quaternion.identity);
+			MovingTile tile = (MovingTile) Instantiate(prefab, ring_positions[spawn_slot], Quaternion.identity);
 			tile.board = this; // give the tile a reference to query the board
 
 			tile.slot = spawn_slot;
-			tile.digit = (int)(Random.value * (size - 2)) + 1;
+			tile.old_position = ring_positions[spawn_slot];
+			tile.next_position = ring_positions[spawn_slot + 1];
+			tile.digit = Random.Range(1, size);
 
 			SpriteRenderer tileSprite = tile.GetComponent<SpriteRenderer>();
 			tileSprite.sprite = sprites[tile.digit];
@@ -86,10 +104,72 @@ public class BoardManager : MonoBehaviour {
 
 	// argument: a "slot" index for a tile moving around the board
 	// returns: (i need to both say yes/no can fire and give a transform)
-	public bool FireFromSlot(int slot)
+	public bool FireTile(MovingTile tile)
 	{
-		// TODO
-		return false;
+		// reject corners
+		if (tile.slot % (size + 1) == 0)
+		{
+			return false;
+		}
+
+		// find the tile's position in grid coords
+		int m = tile.slot % (size + 1), d = tile.slot / (size + 1);
+		int x, y, dx, dy;
+		if (d == 0)
+		{
+			x = m - 1;
+			y = -1;
+			dx = 0;
+			dy = 1;
+		}
+		else if (d == 1)
+		{
+			x = size;
+			y = m + 1;
+			dx = -1;
+			dy = 0;
+		}
+		else if (d == 2)
+		{
+			x = size - m;
+			y = size + 1;
+			dx = 0;
+			dy = -1;
+		}
+		else if (d == 3)
+		{
+			x = -1;
+			y = size - m;
+			dx = 1;
+			dy = 0;
+		}
+		else
+		{
+			return false; // error
+		}
+
+		int tx = x + dx;
+		int ty = y + dy;
+
+		// check if the first row is blocked (tile stays in ring)
+		if (board[x + dx, y + dy] != 0) return false;
+
+		// find the final position
+		while (tx + dx >= 0 && tx + dx < size 
+			&& ty + dy >= 0 && ty + dy < size
+			&& (board[tx + dx, ty + dy] == 0))
+		{
+			tx += dx;
+			ty += dy;
+		}
+
+		// remove the tile from the ring and set its goal position
+		board[tx, ty] = tile.digit;
+		tile.slot = -1;
+		tile.next_position = board_positions[ty * size + tx];
+		tiles.Remove(tile);
+		board_tiles.Add(tile);
+		return true;
 	}
 
 	// check if the board is completely filled

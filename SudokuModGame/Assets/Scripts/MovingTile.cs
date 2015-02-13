@@ -6,10 +6,12 @@ public class MovingTile : MonoBehaviour {
 	public int digit;
 	public int slot = 0;
 
-	public enum State { Ring, Firing, Sleep };
-	public State state = State.Ring;
+	public float smooth = 0.95f;
 
 	public BoardManager board;
+
+	public Vector3 old_position;
+	public Vector3 next_position;
 
 	// Use this for initialization
 	void Start () {
@@ -17,24 +19,22 @@ public class MovingTile : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//TODO: INTERPOLATE TRANSFORM
-	}
-
-	public void move_clockwise(){
-		slot += 1;
-		if (slot >= board.Size() * 4)
-			slot = 0;
-	}
-
-	public void move_counterclockwise(){
-		slot -= 1;
-		if (slot < 0)
-			slot = board.Size() * 4 - 1;
+		// todo: make this an increasing ramp, not smooth slowdown
+		transform.position = Vector3.Lerp(transform.position, next_position, smooth * Time.deltaTime);
 	}
 
 	// on button click: attempt to insert into board
 	public void Fire()
 	{
-		//TODO
+		// this is weird...
+		board.FireTile(this); 
+
+		Debug.Log("DID SOMETHING");
+	}
+
+	public IEnumerator Kill()
+	{
+		yield return new WaitForSeconds(0.5f);
+		Destroy(this.gameObject);
 	}
 }

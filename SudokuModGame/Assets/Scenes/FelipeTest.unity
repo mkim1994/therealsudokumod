@@ -108,12 +108,39 @@ MonoBehaviour:
   - {fileID: 21300000, guid: cc2f12940b663bb429f724c1158f9cfb, type: 3}
   - {fileID: 21300000, guid: e3e52dcb9b16f1747af07479505204ee, type: 3}
   - {fileID: 21300000, guid: 0245b0bb0006b964daf51b514487e2e5, type: 3}
+  board_positions:
+  - {x: -4.5, y: 4.5, z: 0}
+  - {x: 0, y: 4.5, z: 0}
+  - {x: 4.5, y: 4.5, z: 0}
+  - {x: -4.5, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 4.5, y: 0, z: 0}
+  - {x: -4.5, y: -4.5, z: 0}
+  - {x: 0, y: -4.5, z: 0}
+  - {x: 4.5, y: -4.5, z: 0}
+  ring_positions:
+  - {x: -9.75, y: 9.75, z: 0}
+  - {x: -4.5, y: 9.75, z: 0}
+  - {x: 0, y: 9.75, z: 0}
+  - {x: 4.5, y: 9.75, z: 0}
+  - {x: 9.75, y: 9.75, z: 0}
+  - {x: 9.75, y: 4.5, z: 0}
+  - {x: 9.75, y: 0, z: 0}
+  - {x: 9.75, y: -4.5, z: 0}
+  - {x: 9.75, y: -9.75, z: 0}
+  - {x: 4.5, y: -9.75, z: 0}
+  - {x: 0, y: -9.75, z: 0}
+  - {x: -4.5, y: -9.75, z: 0}
+  - {x: -9.75, y: -9.75, z: 0}
+  - {x: -9.75, y: -4.5, z: 0}
+  - {x: -9.75, y: 0, z: 0}
+  - {x: -9.75, y: 4.5, z: 0}
   prefab: {fileID: 11457878, guid: 722fd95fcd265bf47904353d6fe4c04e, type: 2}
-  spawn_position: {x: -4.76999998, y: 9.76000023, z: 0}
   spawn_slot: 1
+  size: 3
   step_interval: 1
   min_step_interval: .300000012
-  step_acceleration: 1.04999995
+  step_acceleration: .949999988
   blarg: {fileID: 8300000, guid: 8762485392287df4ea1f20367c0de27f, type: 3}
 --- !u!4 &106573626
 Transform:
@@ -377,7 +404,7 @@ MonoBehaviour:
   m_Script: {fileID: 1997211142, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AllowActivationOnStandalone: 0
+  m_AllowActivationOnStandalone: 1
 --- !u!114 &1586361137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -394,7 +421,7 @@ MonoBehaviour:
   m_SubmitButton: Submit
   m_CancelButton: Cancel
   m_InputActionsPerSecond: 10
-  m_AllowActivationOnMobileDevice: 0
+  m_AllowActivationOnMobileDevice: 1
 --- !u!114 &1586361138
 MonoBehaviour:
   m_ObjectHideFlags: 0
