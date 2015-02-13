@@ -14,10 +14,10 @@ public class MenuScript : MonoBehaviour
 	}
 
 	public void playbutton(){
-		Invoke("loadlevel", 0.0f);
+		Invoke("loadlevel", 0.1f);
 	}
 	void loadlevel(){
-		Application.LoadLevel("FelipeTest");
+		Application.LoadLevel("1");
 	}
 
 	public void quitbutton(){

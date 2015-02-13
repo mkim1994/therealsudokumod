@@ -291,9 +291,16 @@ public class BoardManager : MonoBehaviour {
 
 	public void nextLevel()
 	{
-		if (gameWin == true) {
-			Invoke ("restartLevel", 0.1f);
-		}
+		//if (gameWin == true) {
+			Invoke ("loadNextLevel", 0.1f);
+		//}
+	}
+	string currentLevel;
+	int levelNum;
+	public void loadNextLevel(){
+		currentLevel = Application.loadedLevelName;
+		levelNum = int.Parse (currentLevel);
+		Application.LoadLevel((levelNum+1).ToString());
 	}
 
 }
