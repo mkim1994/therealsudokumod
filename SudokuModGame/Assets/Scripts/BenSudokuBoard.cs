@@ -16,7 +16,7 @@ public class BenSudokuBoard : MonoBehaviour {
 	public float step_acceleration = 1.05f; //how fast game speeds up (1.0 = constant)
 	public AudioClip blarg;
 	public SpriteRenderer test;
-	public UnityEngine.UI.GUIText timer;
+	//public UnityEngine.UI.GUIText timer;
 	
 	void Start () {
 		board = new int[size, size];
@@ -48,11 +48,13 @@ public class BenSudokuBoard : MonoBehaviour {
 		InvokeRepeating ("Timer", 0.0f, 1.0f);
 	}
 
+/*
 	void Timer()
 	{
 		time++;
 		timer.text = time.ToString ();
-	}
+	}*/
+	
 	// put things to happen at a steady rate in here
 	// invoked from Start above
 	void StepAll()

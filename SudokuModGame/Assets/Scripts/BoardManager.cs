@@ -22,6 +22,23 @@ public class BoardManager : MonoBehaviour {
 	public float step_acceleration = 0.95f;
 	public AudioClip blarg;
 
+	private int[] counts;
+
+	private int genRandomDigit()
+	{
+		int r = Random.Range(1, size);
+		for (int i = 0; i < size; i++)
+		{
+			int digit = (r + i) % size;
+			if (counts[digit] < size)
+			{
+				counts[digit]++;
+				return digit;
+			}
+		}
+		return r;
+	}
+
 	// Use this for initialization
 	void Start () {
 		// create the board
@@ -36,6 +53,9 @@ public class BoardManager : MonoBehaviour {
 
 		tiles = new List<MovingTile>();
 		board_tiles = new List<MovingTile>();
+
+		counts = new int[size];
+		for (int i = 0; i < size; i++) counts[i] = 0;
 
 		// start the game
 		Invoke("Step", step_interval);
@@ -79,7 +99,7 @@ public class BoardManager : MonoBehaviour {
 			tile.slot = spawn_slot;
 			tile.old_position = ring_positions[spawn_slot];
 			tile.next_position = ring_positions[spawn_slot + 1];
-			tile.digit = Random.Range(1, size);
+			tile.digit = genRandomDigit();
 
 			SpriteRenderer tileSprite = tile.GetComponent<SpriteRenderer>();
 			tileSprite.sprite = sprites[tile.digit];
