@@ -69,6 +69,18 @@ public class SudokuBoardALT : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if(Input.GetKey (KeyCode.UpArrow)){
+			FireBottomEdge();
+		}
+		else if(Input.GetKey (KeyCode.DownArrow)){
+			FireTopEdge();
+		}
+		else if(Input.GetKey (KeyCode.RightArrow)){
+			FireLeftEdge();
+		}
+		else if(Input.GetKey (KeyCode.LeftArrow)){
+			FireRightEdge();
+		}
 		// don't put any code here, unless you are adding graphical effects to the board maybe
 	}
 	

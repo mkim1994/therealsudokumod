@@ -5,6 +5,7 @@ public class MoveMove : MonoBehaviour {
 	
 	public int posIndex = 0;	
 	public ArrayList positions = new ArrayList();
+	public SudokuBoardALT board;
 	
 	// Use this for initialization
 	void Start () {
@@ -37,13 +38,16 @@ public class MoveMove : MonoBehaviour {
 		//would need to check conditionals for if a spot is already occupied
 		
 		if(Input.GetKey (KeyCode.UpArrow)){
-			
+			board.FireBottomEdge();
 		}
 		else if(Input.GetKey (KeyCode.DownArrow)){
+			board.FireTopEdge();
 		}
 		else if(Input.GetKey (KeyCode.RightArrow)){
+			board.FireLeftEdge();
 		}
 		else if(Input.GetKey (KeyCode.LeftArrow)){
+			board.FireRightEdge();
 		}
 		
 	}

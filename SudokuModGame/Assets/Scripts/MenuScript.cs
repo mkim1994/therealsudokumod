@@ -24,4 +24,11 @@ public class MenuScript : MonoBehaviour
 		Application.Quit ();
 	}
 
+	public void howtobutton(){
+		Invoke("howto", 0.1f);
+	}
+	void howto(){
+		Application.LoadLevel("Instructions");
+	}
+
 }
