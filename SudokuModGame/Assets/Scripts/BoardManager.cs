@@ -4,16 +4,20 @@ using System.Collections.Generic;
 
 public class BoardManager : MonoBehaviour {
 
+	public Sprite[] sprites;
+
 	public MovingTile prefab; // prefab to create clickable tiles
 	private List<MovingTile> tiles; // references to active tiles
+	public Vector3 spawn_position = new Vector3(-4.77f, 9.76f, 0); // the spawn point
+	public int spawn_slot = 0; // the ring slot of the spawn point
 
 	private int size = 5;
-	private int[,] board;
+	private int[,] board;	
 
 	private int step_count = 0;
 	public float step_interval = 1.0f;
 	public float min_step_interval = 0.3f; //maximum spawn and rotate speed
-	public float step_acceleration = 1.05f;
+	public float step_acceleration = 0.95f;
 	public AudioClip blarg;
 
 	// Use this for initialization
@@ -42,6 +46,8 @@ public class BoardManager : MonoBehaviour {
 	// step the board state, spawning and updating tiles
 	void Step()
 	{
+		step_count += 1;
+
 		// signal all the tiles to rotate forward
 		foreach (MovingTile tile in tiles)
 		{
@@ -51,14 +57,39 @@ public class BoardManager : MonoBehaviour {
 		// spawn a new tile on odd steps
 		if (step_count % 2 == 1)
 		{
-			MovingTile tile = (MovingTile) Instantiate(prefab);
+			MovingTile tile = (MovingTile) Instantiate(prefab, spawn_position, Quaternion.identity);
+			tile.board = this; // give the tile a reference to query the board
+
+			tile.slot = spawn_slot;
+			tile.digit = (int)(Random.value * (size - 2)) + 1;
+
+			SpriteRenderer tileSprite = tile.GetComponent<SpriteRenderer>();
+			tileSprite.sprite = sprites[tile.digit];
+
 			tiles.Add(tile);
 		}
+
+		if (step_interval > min_step_interval && step_count > 15) 
+		{
+			step_interval = step_interval * step_acceleration;
+		}
+
+		audio.PlayOneShot(blarg, 0.7F);
+
+		Invoke ("Step", step_interval);		
 	}
 
 	public int Size()
 	{
 		return size;
+	}
+
+	// argument: a "slot" index for a tile moving around the board
+	// returns: (i need to both say yes/no can fire and give a transform)
+	public bool FireFromSlot(int slot)
+	{
+		// TODO
+		return false;
 	}
 
 	// check if the board is completely filled

@@ -13,15 +13,28 @@ public class MovingTile : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		digit = (int)(Random.value * (board.Size() - 2)) + 1;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		//TODO: INTERPOLATE TRANSFORM
 	}
 
 	public void move_clockwise(){
 		slot += 1;
+		if (slot >= board.Size() * 4)
+			slot = 0;
+	}
+
+	public void move_counterclockwise(){
+		slot -= 1;
+		if (slot < 0)
+			slot = board.Size() * 4 - 1;
+	}
+
+	// on button click: attempt to insert into board
+	public void Fire()
+	{
+		//TODO
 	}
 }
