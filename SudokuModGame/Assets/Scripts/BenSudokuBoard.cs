@@ -8,11 +8,15 @@ public class BenSudokuBoard : MonoBehaviour {
 	private int size = 5;
 	private int fullmask;
 	private int step = 0; //set to negative for a delay before tiles spawn
+	private bool gameRunning = true;
+	private int time = 0;
 	
 	public float step_interval = 1.0f; // seconds between moves
 	public float min_step_interval = 0.3f; //maximum spawn and rotate speed
 	public float step_acceleration = 1.05f; //how fast game speeds up (1.0 = constant)
 	public AudioClip blarg;
+	public SpriteRenderer test;
+	public UnityEngine.UI.GUIText timer;
 	
 	void Start () {
 		board = new int[size, size];
@@ -41,27 +45,34 @@ public class BenSudokuBoard : MonoBehaviour {
 
 		// start the regular board updates
 		Invoke("StepAll", step_interval);
+		InvokeRepeating ("Timer", 0.0f, 1.0f);
 	}
 
+	void Timer()
+	{
+		time++;
+		timer.text = time.ToString ();
+	}
 	// put things to happen at a steady rate in here
 	// invoked from Start above
 	void StepAll()
 	{
-		// example code for basic game
-		StepRingClockwise(); // rotate one slot
-		ring[0, 0] = 0; // keep the top-left corner empty (destroy tiles that go all the way around)
-		if (step % 2 == 1 && step > 0) {
-			ring [0, 1] = ((int)(Random.value * (size - 2))) + 1; // spawn a random tile out of the top-left corner
-			} 
-		else {
-			ring [0, 1] = 0; // spawn empty tile
+		if (gameRunning) {
+			// example code for basic game
+			StepRingClockwise (); // rotate one slot
+			ring [0, 0] = 0; // keep the top-left corner empty (destroy tiles that go all the way around)
+			if (step % 2 == 1 && step > 0) {
+					ring [0, 1] = ((int)(Random.value * (size - 2))) + 1; // spawn a random tile out of the top-left corner
+			} else {
+					ring [0, 1] = 0; // spawn empty tile
 			}
-		if (step_interval > min_step_interval && step > 15) {
-			step_interval = step_interval / step_acceleration; //speed up 
+			if (step_interval > min_step_interval && step > 15) {
+					step_interval = step_interval / step_acceleration; //speed up 
 			}
-		audio.PlayOneShot(blarg, 0.7F);
-		Invoke ("StepAll", step_interval);
-		step += 1;
+			audio.PlayOneShot (blarg, 1.0F);
+			step += 1;
+			Invoke ("StepAll", step_interval);
+		}
 	}
 	
 	void FixedUpdate () {
@@ -83,6 +94,8 @@ public class BenSudokuBoard : MonoBehaviour {
 					return false;
 			}
 		}
+		test.enabled = true;
+		gameRunning = false;
 		return true;
 	}
 
@@ -256,6 +269,7 @@ public class BenSudokuBoard : MonoBehaviour {
 	}
 	public void restartLevel()
 	{
+		gameRunning = true;
 		Application.LoadLevel(Application.loadedLevel);
 	}
 	public void restart()

@@ -14,7 +14,7 @@ public class MenuScript : MonoBehaviour
 	}
 
 	public void playbutton(){
-		Invoke("loadlevel", 0.3f);
+		Invoke("loadlevel", 0.0f);
 	}
 	void loadlevel(){
 		Application.LoadLevel("MelTest");
