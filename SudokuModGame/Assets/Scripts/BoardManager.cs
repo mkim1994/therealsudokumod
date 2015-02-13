@@ -291,9 +291,9 @@ public class BoardManager : MonoBehaviour {
 
 	public void nextLevel()
 	{
-		//if (gameWin == true) {
+		if (gameWin == true) {
 			Invoke ("loadNextLevel", 0.1f);
-		//}
+		}
 	}
 	string currentLevel;
 	int levelNum;

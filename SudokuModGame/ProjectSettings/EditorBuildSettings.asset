@@ -12,8 +12,18 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/MelTest.unity
   - enabled: 1
+    path: Assets/Scenes/Instructions.unity
+  - enabled: 1
     path: Assets/Scenes/1.unity
   - enabled: 1
     path: Assets/Scenes/2.unity
   - enabled: 1
-    path: Assets/Scenes/Instructions.unity
+    path: Assets/Scenes/3.unity
+  - enabled: 1
+    path: Assets/Scenes/4.unity
+  - enabled: 1
+    path: Assets/Scenes/5.unity
+  - enabled: 1
+    path: Assets/Scenes/6.unity
+  - enabled: 1
+    path: Assets/Scenes/7.unity
