@@ -19,7 +19,7 @@ public class BoardManager : MonoBehaviour {
 	public MovingTile prefab; // prefab to create clickable tiles
 	private List<MovingTile> tiles; // references to active tiles
 	private List<MovingTile> board_tiles; // dead tiles in the board
-	public int spawn_slot = 1; // the ring slot of the spawn point
+	public int spawn_slot = 0; // the ring slot of the spawn point
 	private bool gameRunning = true;
 
 	public int size = 3;
