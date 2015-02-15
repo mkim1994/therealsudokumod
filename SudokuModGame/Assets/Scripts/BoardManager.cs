@@ -23,6 +23,7 @@ public class BoardManager : MonoBehaviour {
 	private bool gameRunning = true;
 
 	public int size = 3;
+	public int strikes = 3;
 	private int[,] board;	
 
 	private int step_count = 0;
@@ -205,6 +206,29 @@ public class BoardManager : MonoBehaviour {
 		tiles.Remove(tile);
 		board_tiles.Add(tile);
 
+		for (int i = 0; i < size; i++) {
+			if(i != tx && board[i, ty] == tile.digit)
+			{
+				board[tx, ty] = 0;
+				board_tiles.Remove (tile);
+				StartCoroutine (tile.Kill ());
+				strikes--;
+			}
+			if(i != ty && board[tx, i] == tile.digit)
+			{
+				board[tx, ty] = 0;
+				board_tiles.Remove (tile);
+				StartCoroutine (tile.Kill ());
+				strikes--;
+			}
+		}
+
+		if (strikes == 0)
+		{
+			gameRunning = false;
+			greythingy.enabled = true;
+			Invoke ("LoseGame", 1.0f);
+		}
 		if (IsFull() == true) {
 			gameRunning = false;
 			greythingy.enabled = true;
