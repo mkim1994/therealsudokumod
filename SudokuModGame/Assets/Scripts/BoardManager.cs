@@ -62,15 +62,90 @@ public class BoardManager : MonoBehaviour {
 				board[r,c] = 0;
 			}
 		}
-
+		
 		tiles = new List<MovingTile>();
 		board_tiles = new List<MovingTile>();
 
+		if (Application.loadedLevelName == "1") {PlaceTiles (0);}
+		if (Application.loadedLevelName == "2") {PlaceTiles (2);}
+		if (Application.loadedLevelName == "3") {PlaceTiles (3);}
+
+		
 		counts = new int[size];
 		for (int i = 0; i < size; i++) counts[i] = 0;
-
+		
 		// start the game
 		Invoke("Step", step_interval);
+	}
+
+	void PlaceTiles(int places)
+	{
+		for (int i = 0; i < places; i++)
+		{
+			int[,] oldBoard = (int[,])board.Clone(); 
+			int xpos = Random.Range(0, size);
+			int ypos = Random.Range(0, size); //random placement
+			while (board[xpos,ypos] != 0){
+				xpos = Random.Range(0, size);
+				ypos = Random.Range(0, size); //dont cover up other pieces
+			}
+			int boardpos = size*ypos + xpos; //board pos index based on x,y pos
+			int digit = Random.Range(1, size + 1); // 1-size
+			board [xpos, ypos] = digit;
+			while (Solvable(board) == false){
+				Debug.Log("not solvable");
+				board = (int[,])oldBoard.Clone(); //try again until board is legal
+				xpos = Random.Range(0, size);
+				ypos = Random.Range(0, size); //random placement
+				while (board[xpos,ypos] != 0){
+					xpos = Random.Range(0, size);
+					ypos = Random.Range(0, size); //dont cover up other pieces
+				}
+				boardpos = size*ypos + xpos; //board pos index based on x,y pos
+				digit = Random.Range(1, size + 1); // 1-size
+				board [xpos, ypos] = digit;
+			}
+			MovingTile tile = (MovingTile)Instantiate (prefab, ring_positions [spawn_slot], Quaternion.identity);
+			tile.transform.SetParent (canvas.transform);
+			tile.board = this; // give the tile a reference to query the board
+			tile.digit = digit;
+			Image tileImage = tile.GetComponent<Image> ();
+			tileImage.sprite = sprites [tile.digit - 1];
+			tile.next_position = board_positions [boardpos];
+			board_tiles.Add (tile);
+		}
+	}
+
+	public bool Solvable(int[,] board, int depth=0)
+	{
+		int[,] oldBoard = (int[,])board.Clone(); 
+		while (depth < 10000) { //uuuh... just run 10000 times and hope to find the right board
+			if (IsFull (board) && IsValid (board)) {
+				return true;
+			} 
+			else {
+				board = (int[,])oldBoard.Clone(); 
+				for (int x=0; x < size; x++) {
+					for (int y=0; y < size; y++) {
+						if (board[x,y] == 0){
+						board [x, y] = Random.Range (1, size + 1);
+						}
+					}
+				}
+				depth += 1;
+			}
+		}
+		return false;
+	}
+
+	public void PrintBoard(int[,] board){
+		string s = "";
+		for (int x=0; x < size; x++) {
+			for (int y=0; y < size; y++) {
+				s += (board [x, y]).ToString() + ",";
+			}
+		}
+		Debug.Log (s);
 	}
 	
 	// Update is called once per frame
@@ -229,10 +304,10 @@ public class BoardManager : MonoBehaviour {
 			greythingy.enabled = true;
 			Invoke ("LoseGame", 1.0f);
 		}
-		if (IsFull() == true) {
+		if (IsFull(board) == true) {
 			gameRunning = false;
 			greythingy.enabled = true;
-			if (IsValid () == true) {
+			if (IsValid (board) == true) {
 				Invoke("WinGame", 1.5f);
 			} else {
 				Invoke("LoseGame", 1.5f);
@@ -254,7 +329,7 @@ public class BoardManager : MonoBehaviour {
 
 
 	// check if the board is completely filled
-	public bool IsFull()
+	public bool IsFull(int[,] board)
 	{
 		for (int r = 0; r < size; r++)
 		{
@@ -280,7 +355,7 @@ public class BoardManager : MonoBehaviour {
 	}
 	
 	// check if the board is finished correctly
-	public bool IsValid()
+	public bool IsValid(int[,] board)
 	{
 		for (int myrow = 0; myrow < size; myrow++)
 		{

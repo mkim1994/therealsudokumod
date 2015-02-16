@@ -281,7 +281,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2101265540}
         m_MethodName: restart
         m_Mode: 1
         m_Arguments:
@@ -422,6 +422,22 @@ Prefab:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 959247359}
+    - target: {fileID: 11447942, guid: 860c9bc36b6741c4ca9d96552dd802fc, type: 2}
+      propertyPath: winScreen
+      value: 
+      objectReference: {fileID: 626770961}
+    - target: {fileID: 11447942, guid: 860c9bc36b6741c4ca9d96552dd802fc, type: 2}
+      propertyPath: loseScreen
+      value: 
+      objectReference: {fileID: 2007583119}
+    - target: {fileID: 11447942, guid: 860c9bc36b6741c4ca9d96552dd802fc, type: 2}
+      propertyPath: greythingy
+      value: 
+      objectReference: {fileID: 3152167}
+    - target: {fileID: 11447942, guid: 860c9bc36b6741c4ca9d96552dd802fc, type: 2}
+      propertyPath: nextLevelButtonGreyThingy
+      value: 
+      objectReference: {fileID: 1488574541}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 860c9bc36b6741c4ca9d96552dd802fc, type: 2}
   m_RootGameObject: {fileID: 2101265539}
@@ -676,7 +692,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2101265540}
         m_MethodName: nextLevel
         m_Mode: 1
         m_Arguments:
@@ -1198,14 +1214,15 @@ MonoBehaviour:
   - {x: -9.75, y: -4.5, z: 0}
   - {x: -9.75, y: 0, z: 0}
   - {x: -9.75, y: 4.5, z: 0}
-  winScreen: {fileID: 0}
-  loseScreen: {fileID: 0}
-  greythingy: {fileID: 0}
-  nextLevelButtonGreyThingy: {fileID: 0}
+  winScreen: {fileID: 626770961}
+  loseScreen: {fileID: 2007583119}
+  greythingy: {fileID: 3152167}
+  nextLevelButtonGreyThingy: {fileID: 1488574541}
   gameWin: 0
   prefab: {fileID: 11457878, guid: 722fd95fcd265bf47904353d6fe4c04e, type: 2}
   spawn_slot: 0
   size: 3
+  strikes: 3
   step_interval: 1
   min_step_interval: 1
   step_acceleration: 1
