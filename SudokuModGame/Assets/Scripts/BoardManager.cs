@@ -168,7 +168,7 @@ public class BoardManager : MonoBehaviour {
 								tile.old_position = ring_positions [tile.slot];
 								if (tile.slot == 0) {
 										counts [tile.digit - 1] -= 1;
-										StartCoroutine (tile.Kill ());
+										StartCoroutine (tile.Kill (step_interval));
 								} else {
 										tile.tickTime = time;
 										tile.step_interval = step_interval;
@@ -243,7 +243,7 @@ public class BoardManager : MonoBehaviour {
 		else if (d == 2)
 		{
 			x = size - m;
-			y = size + 1;
+			y = size;
 			dx = 0;
 			dy = -1;
 		}
@@ -286,14 +286,14 @@ public class BoardManager : MonoBehaviour {
 			{
 				board[tx, ty] = 0;
 				board_tiles.Remove (tile);
-				StartCoroutine (tile.Kill ());
+				StartCoroutine (tile.Kill (step_interval));
 				strikes--;
 			}
 			if(i != ty && board[tx, i] == tile.digit)
 			{
 				board[tx, ty] = 0;
 				board_tiles.Remove (tile);
-				StartCoroutine (tile.Kill ());
+				StartCoroutine (tile.Kill (step_interval));
 				strikes--;
 			}
 		}

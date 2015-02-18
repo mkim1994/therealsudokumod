@@ -54,9 +54,9 @@ public class MovingTile : MonoBehaviour {
 		board.FireTile(this); 
 	}
 
-	public IEnumerator Kill()
+	public IEnumerator Kill(float tick)
 	{
-		yield return new WaitForSeconds(0.5f);
+		yield return new WaitForSeconds(tick);
 		Destroy(this.gameObject);
 	}
 }
