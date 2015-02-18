@@ -1680,6 +1680,10 @@ Prefab:
       propertyPath: nextLevelButtonGreyThingy
       value: 
       objectReference: {fileID: 1488574541}
+    - target: {fileID: 11447942, guid: 860c9bc36b6741c4ca9d96552dd802fc, type: 2}
+      propertyPath: zoom
+      value: 
+      objectReference: {fileID: 8300000, guid: b12e2a7532b1e5342aa6106b478abcac, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 860c9bc36b6741c4ca9d96552dd802fc, type: 2}
   m_RootGameObject: {fileID: 2101265539}
@@ -2470,6 +2474,7 @@ MonoBehaviour:
   min_step_interval: 1
   step_acceleration: 1
   blarg: {fileID: 8300000, guid: 8762485392287df4ea1f20367c0de27f, type: 3}
+  zoom: {fileID: 8300000, guid: b12e2a7532b1e5342aa6106b478abcac, type: 3}
 --- !u!82 &2101265541
 AudioSource:
   m_ObjectHideFlags: 0

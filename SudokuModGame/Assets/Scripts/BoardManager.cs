@@ -31,6 +31,7 @@ public class BoardManager : MonoBehaviour {
 	public float min_step_interval = 0.3f; //maximum spawn and rotate speed
 	public float step_acceleration = 0.95f;
 	public AudioClip blarg;
+	public AudioClip zoom;
 
 
 	private int[] counts;
@@ -69,7 +70,7 @@ public class BoardManager : MonoBehaviour {
 		if (Application.loadedLevelName == "1") {PlaceTiles (0);}
 		if (Application.loadedLevelName == "2") {PlaceTiles (2);}
 		if (Application.loadedLevelName == "3") {PlaceTiles (3);}
-
+		if (Application.loadedLevelName == "4") {PlaceTiles (5);}
 		
 		counts = new int[size];
 		for (int i = 0; i < size; i++) counts[i] = 0;
@@ -198,8 +199,9 @@ public class BoardManager : MonoBehaviour {
 								tiles.Add (tile);
 						}
 
-						if (step_interval > min_step_interval && step_count > 15) {
-								step_interval = step_interval * step_acceleration;
+						if (step_interval > min_step_interval && step_count > 2) {
+							//step_interval = step_interval * step_acceleration;
+							Invoke ("SpeedUp", step_interval-min_step_interval);		
 						}
 
 						audio.PlayOneShot (blarg, 0.7F);
@@ -207,6 +209,12 @@ public class BoardManager : MonoBehaviour {
 						Invoke ("Step", step_interval);		
 				}
 		}
+
+	public void SpeedUp(){
+		step_interval = min_step_interval;
+		audio.PlayOneShot (zoom, 1.0F);
+	}
+
 
 	public int Size()
 	{
