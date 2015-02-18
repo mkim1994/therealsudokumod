@@ -45,6 +45,12 @@ public class MovingTile : MonoBehaviour {
 			if (delta > 0.95)
 				sprite.enabled = false;
 		}
+
+		else if (slot == -1)
+		{
+			sprite.color = new Color(1,1,1,1);
+			sprite.enabled = true;
+		}
 	}
 
 	// on button click: attempt to insert into board
