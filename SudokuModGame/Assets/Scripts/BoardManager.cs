@@ -31,6 +31,7 @@ public class BoardManager : MonoBehaviour {
 	public float min_step_interval = 0.3f; //maximum spawn and rotate speed
 	public float step_acceleration = 0.95f;
 	public AudioClip blarg;
+	public AudioClip zoom;
 
 	private int[] counts;
 
@@ -66,9 +67,12 @@ public class BoardManager : MonoBehaviour {
 		board_tiles = new List<MovingTile>();
 
 		if (Application.loadedLevelName == "1") {PlaceTiles (0);}
-		if (Application.loadedLevelName == "2") {PlaceTiles (2);}
-		if (Application.loadedLevelName == "3") {PlaceTiles (3);}
-
+		if (Application.loadedLevelName == "2") {PlaceTiles (1);}
+		if (Application.loadedLevelName == "3") {PlaceTiles (2);}
+		if (Application.loadedLevelName == "4") {PlaceTiles (3);}
+		if (Application.loadedLevelName == "5") {PlaceTiles (3);}
+		if (Application.loadedLevelName == "6") {PlaceTiles (4);}
+		if (Application.loadedLevelName == "7") {PlaceTiles (5);}
 		
 		counts = new int[size];
 		for (int i = 0; i < size; i++) counts[i] = 0;
@@ -81,29 +85,16 @@ public class BoardManager : MonoBehaviour {
 	{
 		for (int i = 0; i < places; i++)
 		{
-			int[,] oldBoard = (int[,])board.Clone(); 
 			int xpos = Random.Range(0, size);
 			int ypos = Random.Range(0, size); //random placement
-			while (board[xpos,ypos] != 0){
+			while (board[xpos,ypos] != 0 || tileInRowOrCol(board, xpos, ypos) == true)
+			{
 				xpos = Random.Range(0, size);
 				ypos = Random.Range(0, size); //dont cover up other pieces
 			}
 			int boardpos = size*ypos + xpos; //board pos index based on x,y pos
-			int digit = Random.Range(1, size + 1); // 1-size
+			int digit = i+1; // 1-size
 			board [xpos, ypos] = digit;
-			while (Solvable(board) == false){
-				Debug.Log("not solvable");
-				board = (int[,])oldBoard.Clone(); //try again until board is legal
-				xpos = Random.Range(0, size);
-				ypos = Random.Range(0, size); //random placement
-				while (board[xpos,ypos] != 0){
-					xpos = Random.Range(0, size);
-					ypos = Random.Range(0, size); //dont cover up other pieces
-				}
-				boardpos = size*ypos + xpos; //board pos index based on x,y pos
-				digit = Random.Range(1, size + 1); // 1-size
-				board [xpos, ypos] = digit;
-			}
 			MovingTile tile = (MovingTile)Instantiate (prefab, ring_positions [spawn_slot], Quaternion.identity);
 			tile.transform.SetParent (canvas.transform);
 			tile.board = this; // give the tile a reference to query the board
@@ -115,6 +106,21 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 
+	public bool tileInRowOrCol(int[,] board, int xpos, int ypos)
+	{
+		for (int x=0; x < size; x++) {
+			for (int y=0; y < size; y++) {
+					if (board [xpos, y] != 0 && y != ypos) {
+							return true;
+					}
+					if (board [x, ypos] != 0 && x != xpos) {
+							return true;
+					}
+				}
+			}
+		return false;
+	}
+	/*
 	public bool Solvable(int[,] board, int depth=0)
 	{
 		int[,] oldBoard = (int[,])board.Clone(); 
@@ -136,6 +142,28 @@ public class BoardManager : MonoBehaviour {
 		}
 		return false;
 	}
+	*/
+	/*
+	public bool Solvable(int[,] oldBoard, int depth=0)
+	{
+		int[,] newBoard = (int[,])oldBoard.Clone(); 
+		PrintBoard (newBoard);
+		if (IsFull (board) && IsValid (board)) {
+			return true;
+		} 
+		else {
+			for (int x=0; x < size; x++) {
+				for (int y=0; y < size; y++) {
+					if (newBoard[x,y] != 0 && newBoard[x,y] < size - 1){
+						newBoard [x,y] += 1;
+						return Solvable(newBoard,depth+1);
+					}
+				}
+			}
+			return false;
+		}
+	}
+	*/
 
 	public void PrintBoard(int[,] board){
 		string s = "";
@@ -167,7 +195,7 @@ public class BoardManager : MonoBehaviour {
 								tile.old_position = ring_positions [tile.slot];
 								if (tile.slot == 0) {
 										counts [tile.digit - 1] -= 1;
-										StartCoroutine (tile.Kill ());
+										StartCoroutine (tile.Kill (step_interval));
 								} else {
 										tile.tickTime = time;
 										tile.step_interval = step_interval;
@@ -196,9 +224,10 @@ public class BoardManager : MonoBehaviour {
 
 								tiles.Add (tile);
 						}
-
-						if (step_interval > min_step_interval && step_count > 15) {
-								step_interval = step_interval * step_acceleration;
+						if (step_interval > min_step_interval && step_count > 0) {
+							//step_interval = step_interval * step_acceleration;
+							Invoke ("SpeedUp", step_interval-min_step_interval);
+							//step_interval = min_step_interval;
 						}
 
 						audio.PlayOneShot (blarg, 0.7F);
@@ -206,6 +235,14 @@ public class BoardManager : MonoBehaviour {
 						Invoke ("Step", step_interval);		
 				}
 		}
+
+	public void SpeedUp(){
+		if (step_interval > min_step_interval) {
+			step_interval -= (step_interval-min_step_interval)/2;
+			//if (step_count < 2){audio.PlayOneShot (zoom, 1.0F);}
+		}
+	}
+
 
 	public int Size()
 	{
@@ -242,7 +279,7 @@ public class BoardManager : MonoBehaviour {
 		else if (d == 2)
 		{
 			x = size - m;
-			y = size + 1;
+			y = size;
 			dx = 0;
 			dy = -1;
 		}
@@ -285,14 +322,14 @@ public class BoardManager : MonoBehaviour {
 			{
 				board[tx, ty] = 0;
 				board_tiles.Remove (tile);
-				StartCoroutine (tile.Kill ());
+				StartCoroutine (tile.Kill (step_interval));
 				strikes--;
 			}
 			if(i != ty && board[tx, i] == tile.digit)
 			{
 				board[tx, ty] = 0;
 				board_tiles.Remove (tile);
-				StartCoroutine (tile.Kill ());
+				StartCoroutine (tile.Kill (step_interval));
 				strikes--;
 			}
 		}

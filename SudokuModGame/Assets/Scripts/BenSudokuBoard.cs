@@ -44,7 +44,7 @@ public class BenSudokuBoard : MonoBehaviour {
 
 		// start the regular board updates
 		Invoke("StepAll", step_interval);
-		InvokeRepeating ("Timer", 0.0f, 1.0f);
+		//InvokeRepeating ("Timer", 0.0f, 1.0f);
 	}
 
 /*

@@ -45,6 +45,12 @@ public class MovingTile : MonoBehaviour {
 			if (delta > 0.95)
 				sprite.enabled = false;
 		}
+
+		else if (slot == -1)
+		{
+			sprite.color = new Color(1,1,1,1);
+			sprite.enabled = true;
+		}
 	}
 
 	// on button click: attempt to insert into board
@@ -54,9 +60,9 @@ public class MovingTile : MonoBehaviour {
 		board.FireTile(this); 
 	}
 
-	public IEnumerator Kill()
+	public IEnumerator Kill(float tick)
 	{
-		yield return new WaitForSeconds(0.5f);
+		yield return new WaitForSeconds(tick);
 		Destroy(this.gameObject);
 	}
 }
