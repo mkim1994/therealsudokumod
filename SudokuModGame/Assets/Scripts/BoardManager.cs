@@ -20,7 +20,7 @@ public class BoardManager : MonoBehaviour {
 	private List<MovingTile> tiles; // references to active tiles
 	private List<MovingTile> board_tiles; // dead tiles in the board
 	public int spawn_slot = 0; // the ring slot of the spawn point
-	private bool gameRunning = true;
+	public bool gameRunning = true;
 
 	public int size = 3;
 	public int strikes = 3;
@@ -31,7 +31,6 @@ public class BoardManager : MonoBehaviour {
 	public float min_step_interval = 0.3f; //maximum spawn and rotate speed
 	public float step_acceleration = 0.95f;
 	public AudioClip blarg;
-
 
 	private int[] counts;
 
@@ -298,7 +297,7 @@ public class BoardManager : MonoBehaviour {
 			}
 		}
 
-		if (strikes == 0)
+		if (strikes <= 0)
 		{
 			gameRunning = false;
 			greythingy.enabled = true;
