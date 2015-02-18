@@ -281,7 +281,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2006808468}
         m_MethodName: restart
         m_Mode: 1
         m_Arguments:
@@ -858,13 +858,14 @@ MonoBehaviour:
   nextLevelButtonGreyThingy: {fileID: 0}
   gameWin: 0
   prefab: {fileID: 11454384, guid: 8829bbb22922719449e49309629de39d, type: 2}
-  spawn_slot: 1
+  spawn_slot: 0
   size: 5
   strikes: 3
   step_interval: .699999988
   min_step_interval: .300000012
   step_acceleration: .949999988
   blarg: {fileID: 8300000, guid: 8762485392287df4ea1f20367c0de27f, type: 3}
+  zoom: {fileID: 0}
 --- !u!82 &2006808469
 AudioSource:
   m_ObjectHideFlags: 0

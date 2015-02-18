@@ -435,7 +435,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 873205447}
         m_MethodName: restart
         m_Mode: 1
         m_Arguments:
@@ -664,6 +664,7 @@ MonoBehaviour:
   min_step_interval: .300000012
   step_acceleration: .949999988
   blarg: {fileID: 8300000, guid: 8762485392287df4ea1f20367c0de27f, type: 3}
+  zoom: {fileID: 0}
 --- !u!82 &873205448
 AudioSource:
   m_ObjectHideFlags: 0
@@ -906,7 +907,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 873205447}
         m_MethodName: nextLevel
         m_Mode: 1
         m_Arguments:
