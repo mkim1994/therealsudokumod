@@ -194,10 +194,12 @@ MonoBehaviour:
   prefab: {fileID: 11457878, guid: 722fd95fcd265bf47904353d6fe4c04e, type: 2}
   spawn_slot: 1
   size: 3
+  strikes: 3
   step_interval: .649999976
   min_step_interval: .649999976
   step_acceleration: 1
   blarg: {fileID: 8300000, guid: 8762485392287df4ea1f20367c0de27f, type: 3}
+  zoom: {fileID: 0}
 --- !u!82 &106573627
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1180,7 +1182,7 @@ SpriteRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayerID: 3527722253
+  m_SortingLayerID: 2366956025
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: b4cf5d08b8b7d454a8040184860031ce, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
