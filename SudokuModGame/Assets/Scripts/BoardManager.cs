@@ -67,10 +67,13 @@ public class BoardManager : MonoBehaviour {
 		tiles = new List<MovingTile>();
 		board_tiles = new List<MovingTile>();
 
-		if (Application.loadedLevelName == "1") {PlaceTiles (1);}
+		if (Application.loadedLevelName == "1") {PlaceTiles (0);}
 		if (Application.loadedLevelName == "2") {PlaceTiles (2);}
 		if (Application.loadedLevelName == "3") {PlaceTiles (3);}
-		if (Application.loadedLevelName == "4") {PlaceTiles (1);}
+		if (Application.loadedLevelName == "4") {PlaceTiles (3);}
+		if (Application.loadedLevelName == "5") {PlaceTiles (3);}
+		if (Application.loadedLevelName == "6") {PlaceTiles (4);}
+		if (Application.loadedLevelName == "7") {PlaceTiles (5);}
 		
 		counts = new int[size];
 		for (int i = 0; i < size; i++) counts[i] = 0;
@@ -86,26 +89,14 @@ public class BoardManager : MonoBehaviour {
 			int[,] oldBoard = (int[,])board.Clone(); 
 			int xpos = Random.Range(0, size);
 			int ypos = Random.Range(0, size); //random placement
-			while (board[xpos,ypos] != 0){
+			while (board[xpos,ypos] != 0 || tileInRowOrCol(board, xpos, ypos) == true)
+			{
 				xpos = Random.Range(0, size);
 				ypos = Random.Range(0, size); //dont cover up other pieces
 			}
 			int boardpos = size*ypos + xpos; //board pos index based on x,y pos
-			int digit = Random.Range(1, size + 1); // 1-size
+			int digit = i+1; // 1-size
 			board [xpos, ypos] = digit;
-			if (Solvable(board) == false){
-				Debug.Log("not solvable");
-				board = (int[,])oldBoard.Clone(); //try again until board is legal
-				xpos = Random.Range(0, size);
-				ypos = Random.Range(0, size); //random placement
-				while (board[xpos,ypos] != 0){
-					xpos = Random.Range(0, size);
-					ypos = Random.Range(0, size); //dont cover up other pieces
-				}
-				boardpos = size*ypos + xpos; //board pos index based on x,y pos
-				digit = Random.Range(1, size + 1); // 1-size
-				board [xpos, ypos] = digit;
-			}
 			MovingTile tile = (MovingTile)Instantiate (prefab, ring_positions [spawn_slot], Quaternion.identity);
 			tile.transform.SetParent (canvas.transform);
 			tile.board = this; // give the tile a reference to query the board
@@ -115,6 +106,21 @@ public class BoardManager : MonoBehaviour {
 			tile.next_position = board_positions [boardpos];
 			board_tiles.Add (tile);
 		}
+	}
+
+	public bool tileInRowOrCol(int[,] board, int xpos, int ypos)
+	{
+		for (int x=0; x < size; x++) {
+			for (int y=0; y < size; y++) {
+					if (board [xpos, y] != 0 && y != ypos) {
+							return true;
+					}
+					if (board [x, ypos] != 0 && x != xpos) {
+							return true;
+					}
+				}
+			}
+		return false;
 	}
 	/*
 	public bool Solvable(int[,] board, int depth=0)
@@ -139,6 +145,7 @@ public class BoardManager : MonoBehaviour {
 		return false;
 	}
 	*/
+	/*
 	public bool Solvable(int[,] oldBoard, int depth=0)
 	{
 		int[,] newBoard = (int[,])oldBoard.Clone(); 
@@ -158,6 +165,7 @@ public class BoardManager : MonoBehaviour {
 			return false;
 		}
 	}
+	*/
 
 	public void PrintBoard(int[,] board){
 		string s = "";
