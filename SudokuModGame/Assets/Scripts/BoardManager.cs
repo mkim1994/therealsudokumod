@@ -225,10 +225,10 @@ public class BoardManager : MonoBehaviour {
 
 								tiles.Add (tile);
 						}
-
-						if (step_interval > min_step_interval && step_count > 2) {
+						if (step_interval > min_step_interval && step_count > 0) {
 							//step_interval = step_interval * step_acceleration;
-							Invoke ("SpeedUp", step_interval-min_step_interval);		
+							Invoke ("SpeedUp", step_interval-min_step_interval);
+							//step_interval = min_step_interval;
 						}
 
 						audio.PlayOneShot (blarg, 0.7F);
@@ -238,8 +238,10 @@ public class BoardManager : MonoBehaviour {
 		}
 
 	public void SpeedUp(){
-		step_interval = min_step_interval;
-		audio.PlayOneShot (zoom, 1.0F);
+		if (step_interval > min_step_interval) {
+			step_interval -= (step_interval-min_step_interval)/2;
+			//if (step_count < 2){audio.PlayOneShot (zoom, 1.0F);}
+		}
 	}
 
 
