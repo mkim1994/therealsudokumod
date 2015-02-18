@@ -68,8 +68,8 @@ public class BoardManager : MonoBehaviour {
 		board_tiles = new List<MovingTile>();
 
 		if (Application.loadedLevelName == "1") {PlaceTiles (0);}
-		if (Application.loadedLevelName == "2") {PlaceTiles (2);}
-		if (Application.loadedLevelName == "3") {PlaceTiles (3);}
+		if (Application.loadedLevelName == "2") {PlaceTiles (1);}
+		if (Application.loadedLevelName == "3") {PlaceTiles (2);}
 		if (Application.loadedLevelName == "4") {PlaceTiles (3);}
 		if (Application.loadedLevelName == "5") {PlaceTiles (3);}
 		if (Application.loadedLevelName == "6") {PlaceTiles (4);}
@@ -86,7 +86,6 @@ public class BoardManager : MonoBehaviour {
 	{
 		for (int i = 0; i < places; i++)
 		{
-			int[,] oldBoard = (int[,])board.Clone(); 
 			int xpos = Random.Range(0, size);
 			int ypos = Random.Range(0, size); //random placement
 			while (board[xpos,ypos] != 0 || tileInRowOrCol(board, xpos, ypos) == true)
