@@ -223,6 +223,14 @@ Prefab:
       propertyPath: nextLevelButtonGreyThingy
       value: 
       objectReference: {fileID: 1488574541}
+    - target: {fileID: 11462516, guid: 02c85bf8a0a9b5e4e8acace3af5ff523, type: 2}
+      propertyPath: min_step_interval
+      value: .400000006
+      objectReference: {fileID: 0}
+    - target: {fileID: 11462516, guid: 02c85bf8a0a9b5e4e8acace3af5ff523, type: 2}
+      propertyPath: step_interval
+      value: .5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 02c85bf8a0a9b5e4e8acace3af5ff523, type: 2}
   m_RootGameObject: {fileID: 873205446}
@@ -660,8 +668,8 @@ MonoBehaviour:
   spawn_slot: 0
   size: 4
   strikes: 3
-  step_interval: .699999988
-  min_step_interval: .300000012
+  step_interval: .5
+  min_step_interval: .400000006
   step_acceleration: .949999988
   blarg: {fileID: 8300000, guid: 8762485392287df4ea1f20367c0de27f, type: 3}
   zoom: {fileID: 0}
