@@ -67,10 +67,10 @@ public class BoardManager : MonoBehaviour {
 		tiles = new List<MovingTile>();
 		board_tiles = new List<MovingTile>();
 
-		if (Application.loadedLevelName == "1") {PlaceTiles (0);}
+		if (Application.loadedLevelName == "1") {PlaceTiles (1);}
 		if (Application.loadedLevelName == "2") {PlaceTiles (2);}
 		if (Application.loadedLevelName == "3") {PlaceTiles (3);}
-		if (Application.loadedLevelName == "4") {PlaceTiles (5);}
+		if (Application.loadedLevelName == "4") {PlaceTiles (1);}
 		
 		counts = new int[size];
 		for (int i = 0; i < size; i++) counts[i] = 0;
@@ -93,7 +93,7 @@ public class BoardManager : MonoBehaviour {
 			int boardpos = size*ypos + xpos; //board pos index based on x,y pos
 			int digit = Random.Range(1, size + 1); // 1-size
 			board [xpos, ypos] = digit;
-			while (Solvable(board) == false){
+			if (Solvable(board) == false){
 				Debug.Log("not solvable");
 				board = (int[,])oldBoard.Clone(); //try again until board is legal
 				xpos = Random.Range(0, size);
@@ -116,7 +116,7 @@ public class BoardManager : MonoBehaviour {
 			board_tiles.Add (tile);
 		}
 	}
-
+	/*
 	public bool Solvable(int[,] board, int depth=0)
 	{
 		int[,] oldBoard = (int[,])board.Clone(); 
@@ -137,6 +137,26 @@ public class BoardManager : MonoBehaviour {
 			}
 		}
 		return false;
+	}
+	*/
+	public bool Solvable(int[,] oldBoard, int depth=0)
+	{
+		int[,] newBoard = (int[,])oldBoard.Clone(); 
+		PrintBoard (newBoard);
+		if (IsFull (board) && IsValid (board)) {
+			return true;
+		} 
+		else {
+			for (int x=0; x < size; x++) {
+				for (int y=0; y < size; y++) {
+					if (newBoard[x,y] != 0 && newBoard[x,y] < size - 1){
+						newBoard [x,y] += 1;
+						return Solvable(newBoard,depth+1);
+					}
+				}
+			}
+			return false;
+		}
 	}
 
 	public void PrintBoard(int[,] board){
