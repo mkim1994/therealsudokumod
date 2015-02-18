@@ -196,7 +196,7 @@ MonoBehaviour:
   size: 3
   strikes: 3
   step_interval: .699999988
-  min_step_interval: .300000012
+  min_step_interval: .5
   step_acceleration: .970000029
   blarg: {fileID: 8300000, guid: 8762485392287df4ea1f20367c0de27f, type: 3}
   zoom: {fileID: 0}

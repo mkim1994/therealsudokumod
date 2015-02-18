@@ -9,7 +9,7 @@ public class BenSudokuBoard : MonoBehaviour {
 	private int fullmask;
 	private int step = 0; //set to negative for a delay before tiles spawn
 	private bool gameRunning = true;
-	private int time = 0;
+	//private int time = 0;
 	
 	public float step_interval = 1.0f; // seconds between moves
 	public float min_step_interval = 0.3f; //maximum spawn and rotate speed
@@ -45,7 +45,7 @@ public class BenSudokuBoard : MonoBehaviour {
 
 		// start the regular board updates
 		Invoke("StepAll", step_interval);
-		InvokeRepeating ("Timer", 0.0f, 1.0f);
+		//InvokeRepeating ("Timer", 0.0f, 1.0f);
 	}
 
 /*
