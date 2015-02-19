@@ -11,6 +11,10 @@ public class MenuScript : MonoBehaviour
 
 
 	void Update(){
+
+		if(Input.GetKey (KeyCode.Escape)){
+			Application.Quit ();
+		}
 	}
 
 	public void playbutton(){
@@ -20,15 +24,16 @@ public class MenuScript : MonoBehaviour
 		Application.LoadLevel("1");
 	}
 
-	public void quitbutton(){
+	/*public void quitbutton(){
 		Application.Quit ();
 	}
-
+*/
 	public void howtobutton(){
 		Invoke("howto", 0.1f);
 	}
 	void howto(){
 		Application.LoadLevel("Instructions");
 	}
+
 
 }

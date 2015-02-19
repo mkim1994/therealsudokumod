@@ -13,7 +13,7 @@ public class BoardManager : MonoBehaviour {
 	public SpriteRenderer winScreen;
 	public SpriteRenderer loseScreen;
 	public SpriteRenderer greythingy;
-	public SpriteRenderer nextLevelButtonGreyThingy;
+	//public SpriteRenderer nextLevelButtonGreyThingy;
 	public bool gameWin;
 
 	public MovingTile prefab; // prefab to create clickable tiles
@@ -32,6 +32,11 @@ public class BoardManager : MonoBehaviour {
 	public float step_acceleration = 0.95f;
 	public AudioClip blarg;
 	public AudioClip zoom;
+
+	public SpriteRenderer strike1;
+	public SpriteRenderer strike2;
+	public SpriteRenderer strike3;
+	public Sprite strikeyes;
 
 	private int[] counts;
 
@@ -178,6 +183,10 @@ public class BoardManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// LEAVE EMPTY
+		if(Input.GetKey (KeyCode.Escape)){
+			Application.Quit ();
+		}
+
 	}
 
 	// step the board state, spawning and updating tiles
@@ -253,6 +262,10 @@ public class BoardManager : MonoBehaviour {
 	// returns: (i need to both say yes/no can fire and give a transform)
 	public bool FireTile(MovingTile tile)
 	{
+
+
+
+
 		// reject corners
 		if (tile.slot % (size + 1) == 0)
 		{
@@ -324,6 +337,16 @@ public class BoardManager : MonoBehaviour {
 				board_tiles.Remove (tile);
 				StartCoroutine (tile.Kill (step_interval));
 				strikes--;
+				if (strikes == 2){
+					strike3.sprite = strikeyes;
+					
+				}
+				else if(strikes == 1){
+					strike2.sprite = strikeyes;;
+				}
+				else if (strikes == 0){
+					strike1.sprite = strikeyes;
+				}
 			}
 			if(i != ty && board[tx, i] == tile.digit)
 			{
@@ -331,6 +354,16 @@ public class BoardManager : MonoBehaviour {
 				board_tiles.Remove (tile);
 				StartCoroutine (tile.Kill (step_interval));
 				strikes--;
+				if (strikes == 2){
+					strike3.sprite = strikeyes;
+					
+				}
+				else if(strikes == 1){
+					strike2.sprite = strikeyes;;
+				}
+				else if (strikes == 0){
+					strike1.sprite = strikeyes;
+				}
 			}
 		}
 
@@ -359,8 +392,10 @@ public class BoardManager : MonoBehaviour {
 
 	public void WinGame(){
 		winScreen.enabled = true;
-		nextLevelButtonGreyThingy.enabled = false;
+		//nextLevelButtonGreyThingy.enabled = false;
 		gameWin = true;
+
+		nextLevel();
 	}
 
 
@@ -427,7 +462,7 @@ public class BoardManager : MonoBehaviour {
 	public void nextLevel()
 	{
 		if (gameWin == true) {
-			Invoke ("loadNextLevel", 0.1f);
+			Invoke ("loadNextLevel", 1);
 		}
 	}
 	string currentLevel;

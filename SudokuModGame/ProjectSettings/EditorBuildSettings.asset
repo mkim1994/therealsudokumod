@@ -6,24 +6,24 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/TitleScreen.unity
+    path: Assets/Scenes/MAINGAME/TitleScreen.unity
   - enabled: 0
-    path: Assets/Scenes/SahayTest.unity
+    path: Assets/Scenes/old stuff/SahayTest.unity
   - enabled: 0
-    path: Assets/Scenes/MelTest.unity
+    path: Assets/Scenes/old stuff/MelTest.unity
   - enabled: 1
-    path: Assets/Scenes/Instructions.unity
+    path: Assets/Scenes/MAINGAME/Instructions.unity
   - enabled: 1
-    path: Assets/Scenes/1.unity
+    path: Assets/Scenes/MAINGAME/1.unity
   - enabled: 1
-    path: Assets/Scenes/2.unity
+    path: Assets/Scenes/MAINGAME/2.unity
   - enabled: 1
-    path: Assets/Scenes/3.unity
+    path: Assets/Scenes/MAINGAME/3.unity
   - enabled: 1
-    path: Assets/Scenes/4.unity
+    path: Assets/Scenes/MAINGAME/4.unity
   - enabled: 1
-    path: Assets/Scenes/5.unity
+    path: Assets/Scenes/MAINGAME/5.unity
   - enabled: 1
-    path: Assets/Scenes/6.unity
+    path: Assets/Scenes/MAINGAME/6.unity
   - enabled: 1
-    path: Assets/Scenes/7.unity
+    path: Assets/Scenes/MAINGAME/7.unity
