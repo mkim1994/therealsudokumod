@@ -3,6 +3,7 @@ using System.Collections;
 
 public class MenuScript : MonoBehaviour
 {
+	public GameObject music;
 
 	void Start(){
 		//Screen.SetResolution (750,500, true);
@@ -30,6 +31,7 @@ public class MenuScript : MonoBehaviour
 */
 	public void howtobutton(){
 		Invoke("howto", 0.1f);
+		//DontDestroyOnLoad(music);
 	}
 	void howto(){
 		Application.LoadLevel("Instructions");
