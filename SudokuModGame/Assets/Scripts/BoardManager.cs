@@ -30,8 +30,13 @@ public class BoardManager : MonoBehaviour {
 	public float step_interval = 1.0f;
 	public float min_step_interval = 0.3f; //maximum spawn and rotate speed
 	public float step_acceleration = 0.95f;
-	public AudioClip blarg;
+	//public AudioClip blarg;
 	public AudioClip zoom;
+	public AudioSource theme;
+	public AudioClip loss;
+	public AudioClip winsound;
+	public AudioClip clicksound;
+	public AudioClip strikesound;
 
 	public SpriteRenderer strike1;
 	public SpriteRenderer strike2;
@@ -57,6 +62,9 @@ public class BoardManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		//theme.Play();
+		//theme.loop = true;
+
 		gameWin = false;
 		// create the board
 		board = new int[size, size];
@@ -239,7 +247,7 @@ public class BoardManager : MonoBehaviour {
 							//step_interval = min_step_interval;
 						}
 
-						audio.PlayOneShot (blarg, 0.7F);
+						//audio.PlayOneShot (blarg, 0.7F);
 
 						Invoke ("Step", step_interval);		
 				}
@@ -337,6 +345,7 @@ public class BoardManager : MonoBehaviour {
 				board_tiles.Remove (tile);
 				StartCoroutine (tile.Kill (step_interval));
 				strikes--;
+				audio.PlayOneShot (strikesound,0.1f);
 				if (strikes == 2){
 					strike3.sprite = strikeyes;
 					
@@ -354,6 +363,7 @@ public class BoardManager : MonoBehaviour {
 				board_tiles.Remove (tile);
 				StartCoroutine (tile.Kill (step_interval));
 				strikes--;
+				audio.PlayOneShot (strikesound,0.1f);
 				if (strikes == 2){
 					strike3.sprite = strikeyes;
 					
@@ -388,10 +398,14 @@ public class BoardManager : MonoBehaviour {
 
 	public void LoseGame(){
 		loseScreen.enabled = true;
+		audio.PlayOneShot (loss, 0.1f);
+		theme.Stop ();
 	}
 
 	public void WinGame(){
 		winScreen.enabled = true;
+		theme.Stop ();
+		audio.PlayOneShot (winsound, 0.1f);
 		//nextLevelButtonGreyThingy.enabled = false;
 		gameWin = true;
 
@@ -449,6 +463,7 @@ public class BoardManager : MonoBehaviour {
 		return true;
 	}
 
+
 	public void restartLevel()
 	{
 		gameRunning = true;
@@ -462,7 +477,7 @@ public class BoardManager : MonoBehaviour {
 	public void nextLevel()
 	{
 		if (gameWin == true) {
-			Invoke ("loadNextLevel", 1);
+			Invoke ("loadNextLevel", 7);
 		}
 	}
 	string currentLevel;

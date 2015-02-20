@@ -11,6 +11,8 @@ public class MovingTile : MonoBehaviour {
 
 	public BoardManager board;
 
+
+
 	public float tickTime;
 	public float step_interval;
 	public Vector3 old_position;
@@ -57,7 +59,9 @@ public class MovingTile : MonoBehaviour {
 	public void Fire()
 	{
 		// this is weird...
+		board.audio.PlayOneShot(board.clicksound,2);
 		board.FireTile(this); 
+
 	}
 
 	public IEnumerator Kill(float tick)
