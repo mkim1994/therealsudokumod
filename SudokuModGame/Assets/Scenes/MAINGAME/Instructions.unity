@@ -186,7 +186,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: 0, y: -42.4000015}
+  m_AnchoredPosition: {x: 0, y: -54}
   m_SizeDelta: {x: 84.6999969, y: 60}
   m_Pivot: {x: .5, y: .5}
 --- !u!1 &381812090
@@ -408,6 +408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06ed704e63b73724d942c6e364fe0531, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  music: {fileID: 0}
 --- !u!1 &1548708952
 GameObject:
   m_ObjectHideFlags: 0

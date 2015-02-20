@@ -7,6 +7,9 @@ public class BoardManager : MonoBehaviour {
 
 	public Canvas canvas;
 
+	public GameObject rocket3x3;
+
+
 	public Sprite[] sprites;
 	public Vector3[] board_positions; // seems like unity cant handle 2d arrays
 	public Vector3[] ring_positions;
@@ -196,6 +199,9 @@ public class BoardManager : MonoBehaviour {
 		// LEAVE EMPTY
 		if(Input.GetKey (KeyCode.Escape)){
 			Application.Quit ();
+		}
+		if(Input.GetKey (KeyCode.Keypad0)){
+			WinGame();
 		}
 
 	}
@@ -405,7 +411,9 @@ public class BoardManager : MonoBehaviour {
 		Times times = GO.GetComponent<Times> ();
 		float[] timesTaken = times.GetResults ();
 		scores.text = "";
-		for (int i = 0; i < 7; i++)
+		string currentLevel = Application.loadedLevelName;
+		int levelNum = int.Parse (currentLevel);
+		for (int i = 0; i < levelNum; i++)
 		{
 			if(timesTaken[i] != 0)
 			{
@@ -417,7 +425,7 @@ public class BoardManager : MonoBehaviour {
 					timeForm = timeForm + "0" + sec.ToString();
 				else
 					timeForm = timeForm + sec.ToString();
-				scores.text = scores.text + level + " - " + timeForm + " ";
+				scores.text = scores.text + " <"+ level + "> " + timeForm + " ";
 			}
 		}
 		scores.enabled = true;
@@ -431,16 +439,24 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	public void WinGame(){
-		winScreen.enabled = true;
-		theme.Stop ();
-		audio.PlayOneShot (winsound, 0.1f);
-		string level = Application.loadedLevelName;
-		if (string.Equals (level, "7"))
-		    ShowResults ();
-		//nextLevelButtonGreyThingy.enabled = false;
-		gameWin = true;
 
-		nextLevel();
+		
+		string level = Application.loadedLevelName;
+
+		if(string.Equals(level, "7")){
+			winScreen.enabled = true;
+			audio.PlayOneShot (winsound, 0.1f);
+			ShowResults();
+			gameWin = true;
+			rocket3x3.SetActive(true);
+		}
+		else{
+			theme.Stop ();
+			audio.PlayOneShot (winsound, 0.1f);
+			gameWin = true;
+			nextLevel();
+		}
+
 	}
 
 
@@ -498,7 +514,14 @@ public class BoardManager : MonoBehaviour {
 	public void restartLevel()
 	{
 		gameRunning = true;
-		Application.LoadLevel(Application.loadedLevel);
+
+		if(gameWin==true && Application.loadedLevelName == "7"){
+			Application.LoadLevel ("TitleScreen");
+		}
+		else{
+
+			Application.LoadLevel(Application.loadedLevel);
+		}
 	}
 	public void restart()
 	{
@@ -507,7 +530,12 @@ public class BoardManager : MonoBehaviour {
 
 	public void nextLevel()
 	{
+		//rocket.SetActive(true);
+		//rocket.
+		//rocket.animation.enabled = true;
+		//animation.Play ("rocket", PlayMode.StopAll);
 		if (gameWin == true) {
+			rocket3x3.SetActive(true);
 			Invoke ("loadNextLevel", 7);
 		}
 	}

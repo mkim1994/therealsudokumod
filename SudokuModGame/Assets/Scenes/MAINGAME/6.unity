@@ -622,6 +622,72 @@ Prefab:
   m_RootGameObject: {fileID: 37639346}
   m_IsPrefabParent: 0
   m_IsExploded: 1
+--- !u!1 &547205032
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 547205035}
+  - 212: {fileID: 547205034}
+  - 95: {fileID: 547205033}
+  m_Layer: 0
+  m_Name: rocket4x4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!95 &547205033
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 547205032}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 84232eb34a4e80a40b51c9516d6be207, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 1
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+--- !u!212 &547205034
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 547205032}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_SortingLayerID: 3527722253
+  m_SortingOrder: 50
+  m_Sprite: {fileID: 21300000, guid: 9734bc073aec9af45b4d2a03c755fbaa, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!4 &547205035
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 547205032}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -41.7000008, y: -.699999988, z: 0}
+  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 17
 --- !u!1001 &583798034
 Prefab:
   m_ObjectHideFlags: 0
@@ -887,6 +953,10 @@ Prefab:
       propertyPath: scores
       value: 
       objectReference: {fileID: 226581622}
+    - target: {fileID: 11462516, guid: 02c85bf8a0a9b5e4e8acace3af5ff523, type: 2}
+      propertyPath: rocket3x3
+      value: 
+      objectReference: {fileID: 547205032}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 02c85bf8a0a9b5e4e8acace3af5ff523, type: 2}
   m_RootGameObject: {fileID: 1771786142}
@@ -3152,6 +3222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 959247359}
+  rocket3x3: {fileID: 547205032}
   sprites:
   - {fileID: 21300000, guid: d936314bcb1823a4a9e7334cb31f663c, type: 3}
   - {fileID: 21300000, guid: 9f7a0dd9bc472cd44a13036398cbe8f4, type: 3}
