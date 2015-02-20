@@ -305,7 +305,7 @@ MonoBehaviour:
   greythingy: {fileID: 3152167}
   gameWin: 0
   prefab: {fileID: 11457878, guid: 722fd95fcd265bf47904353d6fe4c04e, type: 2}
-  spawn_slot: 1
+  spawn_slot: 0
   gameRunning: 1
   size: 3
   strikes: 3

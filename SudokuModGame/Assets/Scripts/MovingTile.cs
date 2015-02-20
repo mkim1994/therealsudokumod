@@ -59,9 +59,12 @@ public class MovingTile : MonoBehaviour {
 	public void Fire()
 	{
 		// this is weird...
-		board.audio.PlayOneShot(board.clicksound,2);
-		board.FireTile(this); 
-
+		if (slot >= 0)
+		{
+			board.audio.PlayOneShot(board.clicksound,2);
+			board.FireTile(this); 
+		}
+		
 	}
 
 	public IEnumerator Kill(float tick)
