@@ -175,6 +175,72 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 14
+--- !u!1 &206083892
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 206083894}
+  - 222: {fileID: 206083895}
+  - 114: {fileID: 206083893}
+  m_Layer: 5
+  m_Name: scores
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &206083893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 206083892}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 1bede7f4c2e8fd84f8eb2a1580b26242, type: 3}
+    m_FontSize: 15
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 1
+    m_RichText: 1
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 
+--- !u!224 &206083894
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 206083892}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: .0850000009, y: .0850000009, z: 1}
+  m_Children: []
+  m_Father: {fileID: 959247360}
+  m_RootOrder: 2
+  m_AnchorMin: {x: .5, y: .5}
+  m_AnchorMax: {x: .5, y: .5}
+  m_AnchoredPosition: {x: 0, y: -16}
+  m_SizeDelta: {x: 100, y: 60}
+  m_Pivot: {x: .5, y: .5}
+--- !u!222 &206083895
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 206083892}
 --- !u!1001 &206684327
 Prefab:
   m_ObjectHideFlags: 0
@@ -1188,6 +1254,7 @@ RectTransform:
   m_Children:
   - {fileID: 293478515}
   - {fileID: 587458172}
+  - {fileID: 206083894}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_AnchorMin: {x: 0, y: 0}
@@ -3324,6 +3391,7 @@ MonoBehaviour:
   strike2: {fileID: 156261125}
   strike3: {fileID: 1419817378}
   strikeyes: {fileID: 21300000, guid: 314cc1061c8069e4eaef185f1693363b, type: 3}
+  scores: {fileID: 206083893}
 --- !u!82 &2006808469
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3599,6 +3667,10 @@ Prefab:
       propertyPath: strikesound
       value: 
       objectReference: {fileID: 8300000, guid: 62296fb1eccf47a4fbe69c7c2d93d561, type: 3}
+    - target: {fileID: 11479676, guid: 671b3ed62d00aee42b5bd2df314cb3fc, type: 2}
+      propertyPath: scores
+      value: 
+      objectReference: {fileID: 206083893}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 671b3ed62d00aee42b5bd2df314cb3fc, type: 2}
   m_RootGameObject: {fileID: 2006808467}

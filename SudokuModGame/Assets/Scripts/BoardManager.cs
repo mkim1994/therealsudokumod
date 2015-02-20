@@ -399,7 +399,8 @@ public class BoardManager : MonoBehaviour {
 		return true;
 	}
 
-	public void LoseGame(){
+	public void ShowResults()
+	{
 		GameObject GO = GameObject.Find ("times");
 		Times times = GO.GetComponent<Times> ();
 		float[] timesTaken = times.GetResults ();
@@ -408,7 +409,6 @@ public class BoardManager : MonoBehaviour {
 		{
 			if(timesTaken[i] != 0)
 			{
-				Debug.Log (timesTaken[i].ToString());
 				string level = (i+1).ToString ();
 				int sec = (int) (timesTaken[i] % 60.0f);
 				int min = (int) (timesTaken[i] / 60.0f);
@@ -418,10 +418,13 @@ public class BoardManager : MonoBehaviour {
 				else
 					timeForm = timeForm + sec.ToString();
 				scores.text = scores.text + level + " - " + timeForm + " ";
-				Debug.Log (scores.text);
 			}
 		}
 		scores.enabled = true;
+	}
+
+	public void LoseGame(){
+		ShowResults ();
 		loseScreen.enabled = true;
 		audio.PlayOneShot (loss, 0.1f);
 		theme.Stop ();
@@ -431,6 +434,9 @@ public class BoardManager : MonoBehaviour {
 		winScreen.enabled = true;
 		theme.Stop ();
 		audio.PlayOneShot (winsound, 0.1f);
+		string level = Application.loadedLevelName;
+		if (string.Equals (level, "7"))
+		    ShowResults ();
 		//nextLevelButtonGreyThingy.enabled = false;
 		gameWin = true;
 
