@@ -38,6 +38,8 @@ public class BoardManager : MonoBehaviour {
 	public SpriteRenderer strike3;
 	public Sprite strikeyes;
 
+	public Text scores;
+
 	private int[] counts;
 
 	private int genRandomDigit()
@@ -57,6 +59,8 @@ public class BoardManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		scores.enabled = false;
+		scores.text = "";
 		gameWin = false;
 		// create the board
 		board = new int[size, size];
@@ -387,6 +391,28 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	public void LoseGame(){
+		GameObject GO = GameObject.Find ("times");
+		Times times = GO.GetComponent<Times> ();
+		float[] timesTaken = times.GetResults ();
+		scores.text = "";
+		for (int i = 0; i < 7; i++)
+		{
+			if(timesTaken[i] != 0)
+			{
+				Debug.Log (timesTaken[i].ToString());
+				string level = (i+1).ToString ();
+				int sec = (int) (timesTaken[i] % 60.0f);
+				int min = (int) (timesTaken[i] / 60.0f);
+				string timeForm = min.ToString () + ":";
+				if (sec < 10)
+					timeForm = timeForm + "0" + sec.ToString();
+				else
+					timeForm = timeForm + sec.ToString();
+				scores.text = scores.text + level + " - " + timeForm + " ";
+				Debug.Log (scores.text);
+			}
+		}
+		scores.enabled = true;
 		loseScreen.enabled = true;
 	}
 

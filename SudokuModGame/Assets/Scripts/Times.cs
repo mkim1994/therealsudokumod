@@ -31,7 +31,8 @@ public class Times : MonoBehaviour {
 		currentLevel = int.Parse (level);
 		timesTaken[currentLevel-1] = timeTaken.gameTime;
 	}
-	float[] GetResults ()
+
+	public float[] GetResults ()
 	{
 		return timesTaken;
 	}
